@@ -35,6 +35,139 @@
   >
 
   <link rel="stylesheet" href="style.css">
+
+<style id="portfolio-updates">
+  .venture-mebix .venture-visual{
+    background:
+      radial-gradient(circle at 70% 25%, rgba(255,255,255,.18), transparent 28%),
+      linear-gradient(135deg,#111 0%,#2c2c2c 48%,#0b0b0b 100%);
+    color:#fff;
+    position:relative;
+    overflow:hidden;
+  }
+  .mebix-grid-mark{
+    position:absolute;
+    inset:0;
+    opacity:.16;
+    background-image:linear-gradient(rgba(255,255,255,.18) 1px,transparent 1px),
+                     linear-gradient(90deg,rgba(255,255,255,.18) 1px,transparent 1px);
+    background-size:34px 34px;
+    transform:skewY(-8deg) scale(1.15);
+  }
+  .mebix-wordmark{
+    position:relative;
+    z-index:2;
+    font:800 clamp(3.5rem,9vw,8rem)/.9 Manrope,sans-serif;
+    letter-spacing:-.08em;
+  }
+  .aic-feature{
+    margin-top:clamp(3rem,7vw,7rem);
+    padding-top:clamp(2.5rem,5vw,5rem);
+    border-top:1px solid rgba(0,0,0,.14);
+  }
+  .aic-feature-head{
+    display:flex;
+    justify-content:space-between;
+    gap:2rem;
+    align-items:end;
+    margin-bottom:2rem;
+  }
+  .aic-feature-head h3{
+    margin:.45rem 0 0;
+    font:700 clamp(2rem,4vw,4rem)/1 Manrope,sans-serif;
+    letter-spacing:-.05em;
+  }
+  .aic-feature-note{
+    max-width:34rem;
+    font-size:.95rem;
+    line-height:1.7;
+    opacity:.72;
+  }
+  .aic-gallery{
+    display:grid;
+    grid-template-columns:1.05fr .95fr;
+    grid-template-rows:auto auto;
+    gap:1rem;
+  }
+  .aic-photo{
+    position:relative;
+    overflow:hidden;
+    min-height:300px;
+    background:#ddd;
+    border-radius:2px;
+  }
+  .aic-photo:first-child{grid-row:1 / span 2; min-height:620px;}
+  .aic-photo img{
+    width:100%;
+    height:100%;
+    min-height:inherit;
+    display:block;
+    object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.7,.2,1), filter .8s ease;
+  }
+  .aic-photo:hover img{
+    transform:scale(1.045);
+    filter:saturate(1.05);
+  }
+  .aic-photo-label{
+    position:absolute;
+    left:1rem;
+    bottom:1rem;
+    padding:.55rem .7rem;
+    background:rgba(0,0,0,.72);
+    color:#fff;
+    font-size:.68rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    backdrop-filter:blur(8px);
+  }
+  .aic-feature-copy{
+    display:flex;
+    justify-content:space-between;
+    gap:2rem;
+    margin-top:1.5rem;
+    align-items:start;
+  }
+  .aic-feature-copy p{max-width:44rem; margin:0; line-height:1.75; opacity:.8;}
+  .aic-tag{
+    white-space:nowrap;
+    font-size:.7rem;
+    letter-spacing:.16em;
+    text-transform:uppercase;
+    opacity:.55;
+  }
+  .certification-grid .certificate:nth-child(n+7){display:none;}
+  .certifications-more{
+    margin-top:1.5rem;
+    padding-top:1.5rem;
+    border-top:1px solid rgba(0,0,0,.14);
+    display:flex;
+    justify-content:space-between;
+    gap:1.5rem;
+    align-items:center;
+  }
+  .certifications-more span{
+    opacity:.65;
+    font-size:.9rem;
+  }
+  .certifications-more a{
+    text-decoration:none;
+    font-size:.72rem;
+    letter-spacing:.12em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  @media (max-width:800px){
+    .aic-gallery{grid-template-columns:1fr;grid-template-rows:auto;}
+    .aic-photo:first-child{grid-row:auto;min-height:430px;}
+    .aic-photo{min-height:280px;}
+    .aic-feature-head,.aic-feature-copy,.certifications-more{
+      flex-direction:column;
+      align-items:flex-start;
+    }
+  }
+</style>
+
 </head>
 
 <body>
@@ -486,9 +619,32 @@
           </div>
         </article>
 
-        <article class="venture-card venture-sukoon reveal" data-tilt>
+
+        <article class="venture-card venture-mebix reveal" data-tilt>
           <div class="venture-number">02</div>
-          <div class="venture-visual sukoon-visual">
+          <div class="venture-visual">
+            <div class="mebix-grid-mark"></div>
+            <span class="venture-overline">MARKETING / GROWTH / PERFORMANCE</span>
+            <div class="mebix-wordmark">MEBIX</div>
+            <span class="venture-symbol">↗</span>
+          </div>
+          <div class="venture-info">
+            <div>
+              <span class="project-type">FOUNDER</span>
+              <h3>MEBIX GROWTH</h3>
+              <span class="project-subtitle">JAN 2025 — JAN 2026</span>
+            </div>
+            <p>
+              A performance marketing venture focused on Meta Ads, lead generation
+              and customer acquisition systems for local businesses.
+            </p>
+            <span class="project-link project-link-disabled">Past venture <span>→</span></span>
+          </div>
+        </article>
+
+        <article class="venture-card venture-sukoon reveal" data-tilt>
+          <div class="venture-number">03</div>
+          <div class="venture-visual sukoon-visual>
             <div class="sukoon-logo-wrap">
               <img src="sukoon-logo.png" alt="Sukoon By Nature logo" loading="lazy">
             </div>
@@ -508,7 +664,7 @@
         </article>
 
         <article class="venture-card venture-next reveal" data-tilt>
-          <div class="venture-number">03</div>
+          <div class="venture-number">04</div>
           <div class="venture-visual">
             <span class="venture-overline">IDEAS / EXPERIMENTS / IMPACT</span>
             <div class="next-orbit"><span>✦</span></div>
@@ -577,10 +733,76 @@
       </div>
 
       <div class="journey-timeline">
-        <article class="journey-card reveal"><span class="journey-icon">01</span><span class="journey-tag">EDUCATION</span><h3>Inspira Knowledge Campus</h3><span class="journey-year">2025 — 2029</span><p>Pursuing my degree while building, learning and growing every day.</p></article>
-        <article class="journey-card reveal"><span class="journey-icon">02</span><span class="journey-tag">STARTUP ECOSYSTEM</span><h3>Communities & Experiences</h3><span class="journey-year">ONGOING</span><p>Learning from startup communities, mentors and experiences across the ecosystem.</p></article>
-        <article class="journey-card reveal"><span class="journey-icon">03</span><span class="journey-tag">COMPETITIONS</span><h3>Data, Finance & Strategy</h3><span class="journey-year">2026</span><p>Competing, solving problems and sharpening decision-making through real challenges.</p></article>
-        <article class="journey-card reveal"><span class="journey-icon">04</span><span class="journey-tag">SPEAKING & LEADERSHIP</span><h3>Communicator & Team Player</h3><span class="journey-year">ONGOING</span><p>Building confidence in communication, leadership and turning ideas into action.</p></article>
+        <article class="journey-card reveal">
+          <span class="journey-icon">01</span>
+          <span class="journey-tag">EDUCATION</span>
+          <h3>Inspira Knowledge Campus</h3>
+          <span class="journey-year">2025 — 2029</span>
+          <p>Pursuing my BBA in Entrepreneurship while building, learning and gaining practical exposure.</p>
+        </article>
+
+        <article class="journey-card reveal">
+          <span class="journey-icon">02</span>
+          <span class="journey-tag">VENTURE BUILDING</span>
+          <h3>Mebix Growth</h3>
+          <span class="journey-year">2025 — 2026</span>
+          <p>Founded and worked on performance marketing, Meta Ads, lead generation and customer acquisition.</p>
+        </article>
+
+        <article class="journey-card reveal">
+          <span class="journey-icon">03</span>
+          <span class="journey-tag">STARTUP ECOSYSTEM</span>
+          <h3>AIC-SMUTBI</h3>
+          <span class="journey-year">EXPERIENCE</span>
+          <p>Startup ecosystem exposure through AIC-SMUTBI at Sikkim Manipal University.</p>
+        </article>
+
+        <article class="journey-card reveal">
+          <span class="journey-icon">04</span>
+          <span class="journey-tag">BUILDING</span>
+          <h3>FLARE</h3>
+          <span class="journey-year">2026 — PRESENT</span>
+          <p>Building an events and experiences venture focused on brands, people and memorable moments.</p>
+        </article>
+      </div>
+
+      <div class="aic-feature reveal">
+        <div class="aic-feature-head">
+          <div>
+            <span class="small-label">STARTUP ECOSYSTEM</span>
+            <h3>AIC-SMUTBI</h3>
+          </div>
+          <p class="aic-feature-note">
+            A visual snapshot from my experience at AIC-SMUTBI, Sikkim Manipal University.
+            More of the journey and professional activity can be explored on LinkedIn.
+          </p>
+        </div>
+
+        <div class="aic-gallery">
+          <figure class="aic-photo">
+            <img src="aic-smutbi-01.png" alt="Bivek at AIC-SMUTBI, Sikkim Manipal University" loading="lazy">
+            <span class="aic-photo-label">AIC-SMUTBI · 01</span>
+          </figure>
+
+          <figure class="aic-photo">
+            <img src="aic-smutbi-02.png" alt="AIC-SMUTBI interior at Sikkim Manipal University" loading="lazy">
+            <span class="aic-photo-label">AIC-SMUTBI · 02</span>
+          </figure>
+
+          <figure class="aic-photo">
+            <img src="aic-smutbi-03.png" alt="Bivek during an AIC-SMUTBI experience" loading="lazy">
+            <span class="aic-photo-label">AIC-SMUTBI · 03</span>
+          </figure>
+        </div>
+
+        <div class="aic-feature-copy">
+          <p>
+            Exposure to an active startup environment, people and entrepreneurial
+            experiences — presented here as a selected visual moment rather than
+            an exhaustive list of activities.
+          </p>
+          <span class="aic-tag">SELECTED MOMENT / NOT THE FULL STORY</span>
+        </div>
       </div>
     </section>
 
@@ -596,7 +818,7 @@
         <article class="achievement reveal"><span>01</span><strong>2nd Position</strong><p>DATA DOMINION — Prelims</p></article>
         <article class="achievement reveal"><span>02</span><strong>Corporanza</strong><p>Bulls & Bears Participant</p></article>
         <article class="achievement reveal"><span>03</span><strong>Startup Weekend</strong><p>Siliguri Participant</p></article>
-        <article class="achievement reveal"><span>04</span><strong>Toastmasters</strong><p>International Member</p></article>
+        <article class="achievement reveal"><span>04</span><strong>Mebix Growth</strong><p>Founded & led a performance marketing venture</p></article>
         <article class="achievement reveal"><span>05</span><strong>IIT Kharagpur</strong><p>Experience & Exposure</p></article>
         <article class="achievement reveal"><span>06</span><strong>Passionate Learner</strong><p>Always building the next skill</p></article>
       </div>
@@ -611,29 +833,19 @@
       <div class="section-meta reveal"><span>06</span><span>CERTIFICATIONS</span></div>
       <div class="certification-head reveal"><span class="small-label">LIFE LONG LEARNER</span><h2>Skills backed by <em>learning.</em></h2></div>
       <div class="certification-grid stagger">
-        <article class="certificate reveal"><span>01</span><strong>Power BI Micro Course</strong><small>SkillCourse · Jun 2026</small></article>
-        <article class="certificate reveal"><span>02</span><strong>Integrated Consulting Group</strong><small>Oliver Wyman · Forage · Jun 2026</small></article>
-        <article class="certificate reveal"><span>03</span><strong>Data Analytics</strong><small>Deloitte Australia · Forage · Jun 2026</small></article>
-        <article class="certificate reveal"><span>04</span><strong>Branding on Social Media</strong><small>WhiteBoard Labs Australia · Jan 2026</small></article>
-        <article class="certificate reveal"><span>05</span><strong>Responsible AI & LLMs</strong><small>Google Cloud Skills Boost · Jan 2026</small></article>
-        <article class="certificate reveal"><span>06</span><strong>LinkedIn Essentials</strong><small>IIDE – The Digital School · Dec 2025</small></article>
-        <article class="certificate reveal"><span>07</span><strong>Instagram Marketing</strong><small>IIDE – The Digital School · Dec 2025</small></article>
-        <article class="certificate reveal"><span>08</span><strong>ChatGPT MasterClass</strong><small>IIDE – The Digital School · Dec 2025</small></article>
-        <article class="certificate reveal"><span>09</span><strong>AI in Digital Marketing</strong><small>IIDE – The Digital School · Dec 2025</small></article>
-        <article class="certificate reveal"><span>10</span><strong>Digital Marketing Fundamentals</strong><small>IIDE – The Digital School · Dec 2025</small></article>
-        <article class="certificate reveal"><span>11</span><strong>Instagram Marketing</strong><small>Simplilearn · Dec 2025</small></article>
-        <article class="certificate reveal"><span>12</span><strong>Business Analytics with Excel</strong><small>Simplilearn · Dec 2025</small></article>
-        <article class="certificate reveal"><span>13</span><strong>Facebook Marketing & Advertising</strong><small>Simplilearn · Dec 2025</small></article>
-        <article class="certificate reveal"><span>14</span><strong>Grow Your Business</strong><small>Meta · Nov 2025</small></article>
-        <article class="certificate reveal"><span>15</span><strong>Instagram Marketing</strong><small>Meta · Nov 2025</small></article>
-        <article class="certificate reveal"><span>16</span><strong>Create Reels</strong><small>Meta · Nov 2025</small></article>
-        <article class="certificate reveal"><span>17</span><strong>Facebook Marketing</strong><small>Meta · Nov 2025</small></article>
-        <article class="certificate reveal"><span>18</span><strong>Affiliate Marketing</strong><small>Growth Addicted · Aug 2025</small></article>
-        <article class="certificate reveal"><span>19</span><strong>Lead Generation</strong><small>Growth Addicted · Aug 2025</small></article>
-        <article class="certificate reveal"><span>20</span><strong>Social Media Management</strong><small>Growth Addicted · Aug 2025</small></article>
-        <article class="certificate reveal"><span>21</span><strong>Sales Closing</strong><small>Growth Addicted · Aug 2025</small></article>
-        <article class="certificate reveal"><span>22</span><strong>Microsoft Word</strong><small>Growth Addicted · Aug 2025</small></article>
-        <article class="certificate reveal"><span>23</span><strong>Freelancing</strong><small>Growth Addicted · Aug 2023 · Expired Jan 2025</small></article>
+        <article class="certificate reveal"><span>01</span><strong>Integrated Consulting Group</strong><small>Oliver Wyman · Forage · Jun 2026</small></article>
+        <article class="certificate reveal"><span>02</span><strong>Data Analytics</strong><small>Deloitte Australia · Forage · Jun 2026</small></article>
+        <article class="certificate reveal"><span>03</span><strong>Responsible AI & LLMs</strong><small>Google Cloud Skills Boost · Jan 2026</small></article>
+        <article class="certificate reveal"><span>04</span><strong>Power BI Micro Course</strong><small>SkillCourse · Jun 2026</small></article>
+        <article class="certificate reveal"><span>05</span><strong>Grow Your Business</strong><small>Meta · Nov 2025</small></article>
+        <article class="certificate reveal"><span>06</span><strong>Digital Marketing Fundamentals</strong><small>IIDE – The Digital School · Dec 2025</small></article>
+      </div>
+
+      <div class="certifications-more reveal">
+        <span>20+ certifications across marketing, analytics & business.</span>
+        <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer">
+          View all on LinkedIn ↗
+        </a>
       </div>
     </section>>
 
@@ -707,6 +919,9 @@
             For collaborations, opportunities,
             partnerships or interesting ideas,
             connect with me on LinkedIn.
+            <br><br>
+            My LinkedIn also contains the fuller record of my
+            certifications, experiences and professional activity.
           </p>
 
           <a
