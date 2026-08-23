@@ -1,5 +1,11 @@
+/* =========================================================
+   BIVEK RAY — PREMIUM PORTFOLIO
+   MASTER JAVASCRIPT
+========================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
+
 
   /* =========================================================
      HELPERS
@@ -11,26 +17,18 @@ document.addEventListener("DOMContentLoaded", () => {
   const $$ = (selector, parent = document) =>
     [...parent.querySelectorAll(selector)];
 
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  const finePointer = window.matchMedia(
-    "(pointer: fine)"
-  ).matches;
-
 
   /* =========================================================
-     PAGE TRANSITION
+     PAGE LOADER
   ========================================================= */
 
-  const pageTransition = $("#pageTransition");
+  const loader = $(".loader");
 
-  if (pageTransition) {
+  if (loader) {
     window.addEventListener("load", () => {
       setTimeout(() => {
-        pageTransition.classList.add("loaded");
-      }, 650);
+        loader.classList.add("loaded");
+      }, 500);
     });
   }
 
@@ -39,47 +37,51 @@ document.addEventListener("DOMContentLoaded", () => {
      CUSTOM CURSOR
   ========================================================= */
 
-  const cursor = $("#cursor");
+  const cursorDot = $(".cursor-dot");
+  const cursorCircle = $(".cursor-circle");
 
-  if (cursor && finePointer && !reduceMotion) {
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
+
+  if (cursorDot && cursorCircle && finePointer) {
 
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
-    let currentX = mouseX;
-    let currentY = mouseY;
+    let circleX = mouseX;
+    let circleY = mouseY;
 
     document.addEventListener("mousemove", (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
+
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
     });
 
-    const moveCursor = () => {
+    const animateCursor = () => {
+      circleX += (mouseX - circleX) * 0.13;
+      circleY += (mouseY - circleY) * 0.13;
 
-      currentX += (mouseX - currentX) * 0.14;
-      currentY += (mouseY - currentY) * 0.14;
+      cursorCircle.style.left = `${circleX}px`;
+      cursorCircle.style.top = `${circleY}px`;
 
-      cursor.style.left = `${currentX}px`;
-      cursor.style.top = `${currentY}px`;
-
-      requestAnimationFrame(moveCursor);
+      requestAnimationFrame(animateCursor);
     };
 
-    moveCursor();
-
+    animateCursor();
 
     const interactiveElements = $$(
-      "a, button, .work-item, .hero-portrait, .portrait-frame"
+      "a, button, .project, .skill, .portrait-frame"
     );
 
     interactiveElements.forEach((element) => {
 
       element.addEventListener("mouseenter", () => {
-        cursor.classList.add("active");
+        cursorCircle.classList.add("active");
       });
 
       element.addEventListener("mouseleave", () => {
-        cursor.classList.remove("active");
+        cursorCircle.classList.remove("active");
       });
 
     });
@@ -90,55 +92,41 @@ document.addEventListener("DOMContentLoaded", () => {
      MOBILE MENU
   ========================================================= */
 
-  const mobileTrigger = $("#mobileTrigger");
-  const mobileNavigation = $("#mobileNavigation");
-
-  const mobileLinks = $$(
-    ".mobile-navigation nav a"
-  );
-
+  const menuToggle = $(".menu-toggle");
+  const mobileNavigation = $(".mobile-navigation");
+  const mobileLinks = $$(".mobile-navigation a");
 
   const closeMenu = () => {
 
-    if (!mobileTrigger || !mobileNavigation) {
-      return;
-    }
+    if (!menuToggle || !mobileNavigation) return;
 
-    mobileTrigger.classList.remove("active");
-    mobileNavigation.classList.remove("active");
+    menuToggle.classList.remove("open");
+    mobileNavigation.classList.remove("open");
 
     document.body.classList.remove("menu-open");
   };
 
+  if (menuToggle && mobileNavigation) {
 
-  const openMenu = () => {
-
-    if (!mobileTrigger || !mobileNavigation) {
-      return;
-    }
-
-    mobileTrigger.classList.add("active");
-    mobileNavigation.classList.add("active");
-
-    document.body.classList.add("menu-open");
-  };
-
-
-  if (mobileTrigger && mobileNavigation) {
-
-    mobileTrigger.addEventListener("click", () => {
+    menuToggle.addEventListener("click", () => {
 
       const isOpen =
-        mobileNavigation.classList.contains("active");
+        mobileNavigation.classList.contains("open");
 
       if (isOpen) {
+
         closeMenu();
+
       } else {
-        openMenu();
+
+        menuToggle.classList.add("open");
+        mobileNavigation.classList.add("open");
+
+        document.body.classList.add("menu-open");
+
       }
 
     });
-
 
     mobileLinks.forEach((link) => {
 
@@ -151,71 +139,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     ESCAPE KEY
+     HEADER SHOW / HIDE
   ========================================================= */
 
-  document.addEventListener("keydown", (event) => {
-
-    if (event.key === "Escape") {
-      closeMenu();
-    }
-
-  });
-
-
-  /* =========================================================
-     HEADER HIDE / SHOW
-  ========================================================= */
-
-  const header = $("#header");
+  const header = $(".header");
 
   if (header) {
 
-    let previousScroll = window.scrollY;
-    let ticking = false;
-
-
-    const updateHeader = () => {
-
-      const currentScroll = window.scrollY;
-
-
-      if (currentScroll < 80) {
-
-        header.classList.remove("hidden");
-
-      } else if (currentScroll > previousScroll) {
-
-        header.classList.add("hidden");
-
-      } else {
-
-        header.classList.remove("hidden");
-
-      }
-
-
-      previousScroll = currentScroll;
-
-      ticking = false;
-    };
-
+    let lastScroll = window.scrollY;
 
     window.addEventListener(
       "scroll",
       () => {
 
-        if (!ticking) {
+        const currentScroll = window.scrollY;
 
-          requestAnimationFrame(updateHeader);
+        if (
+          currentScroll > 120 &&
+          currentScroll > lastScroll
+        ) {
 
-          ticking = true;
+          header.classList.add("hidden");
+
+        } else {
+
+          header.classList.remove("hidden");
+
         }
 
+        lastScroll = currentScroll;
+
       },
-      {
-        passive: true
-      }
+      { passive: true }
     );
   }
 
@@ -226,109 +181,90 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const revealElements = $$(".reveal");
 
+  if ("IntersectionObserver" in window) {
 
-  if (
-    "IntersectionObserver" in window &&
-    !reduceMotion
-  ) {
+    const observer = new IntersectionObserver(
+      (entries, observerInstance) => {
 
-    const revealObserver =
-      new IntersectionObserver(
-        (entries, observer) => {
+        entries.forEach((entry) => {
 
-          entries.forEach((entry) => {
-
-            if (!entry.isIntersecting) {
-              return;
-            }
-
+          if (entry.isIntersecting) {
 
             entry.target.classList.add("visible");
 
-            observer.unobserve(entry.target);
+            observerInstance.unobserve(entry.target);
 
-          });
+          }
 
-        },
-        {
-          threshold: 0.12,
+        });
 
-          rootMargin:
-            "0px 0px -60px 0px"
-        }
-      );
-
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
 
     revealElements.forEach((element) => {
-
-      revealObserver.observe(element);
-
+      observer.observe(element);
     });
 
   } else {
 
     revealElements.forEach((element) => {
-
       element.classList.add("visible");
-
     });
 
   }
 
 
   /* =========================================================
+     STAGGERED REVEALS
+  ========================================================= */
+
+  const staggerGroups = $$(".stagger");
+
+  staggerGroups.forEach((group) => {
+
+    const children = [...group.children];
+
+    children.forEach((child, index) => {
+
+      child.style.transitionDelay =
+        `${index * 80}ms`;
+
+    });
+
+  });
+
+
+  /* =========================================================
      SMOOTH ANCHOR SCROLL
   ========================================================= */
 
-  const anchorLinks = $$(
-    'a[href^="#"]'
-  );
-
+  const anchorLinks = $$('a[href^="#"]');
 
   anchorLinks.forEach((link) => {
 
-    link.addEventListener(
-      "click",
-      (event) => {
+    link.addEventListener("click", (event) => {
 
-        const targetId =
-          link.getAttribute("href");
+      const targetId =
+        link.getAttribute("href");
 
+      if (!targetId || targetId === "#") return;
 
-        if (
-          !targetId ||
-          targetId === "#"
-        ) {
-          return;
-        }
+      const target = $(targetId);
 
+      if (!target) return;
 
-        const target =
-          $(targetId);
+      event.preventDefault();
 
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
 
-        if (!target) {
-          return;
-        }
-
-
-        event.preventDefault();
-
-
-        target.scrollIntoView({
-          behavior:
-            reduceMotion
-              ? "auto"
-              : "smooth",
-
-          block: "start"
-        });
-
-
-        closeMenu();
-
-      }
-    );
+    });
 
   });
 
@@ -337,317 +273,156 @@ document.addEventListener("DOMContentLoaded", () => {
      HERO IMAGE PARALLAX
   ========================================================= */
 
-  const heroPortrait =
-    $(".hero-portrait");
+  const portrait = $(".portrait-frame img");
 
-  const heroImage =
-    $(".portrait-frame img");
+  const reducedMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
 
+  if (portrait && !reducedMotion) {
 
-  if (
-    heroPortrait &&
-    heroImage &&
-    !reduceMotion
-  ) {
-
-    let heroTicking = false;
-
-
-    const updateHeroImage = () => {
-
-      const scrollY =
-        window.scrollY;
-
-      const heroHeight =
-        window.innerHeight;
-
-
-      if (scrollY <= heroHeight) {
-
-        const movement =
-          scrollY * 0.035;
-
-
-        heroImage.style.transform =
-          `scale(1.04) translate3d(0, ${movement}px, 0)`;
-
-      }
-
-
-      heroTicking = false;
-    };
-
+    let ticking = false;
 
     window.addEventListener(
       "scroll",
       () => {
 
-        if (!heroTicking) {
+        if (ticking) return;
 
-          requestAnimationFrame(
-            updateHeroImage
-          );
+        ticking = true;
 
-          heroTicking = true;
+        requestAnimationFrame(() => {
+
+          const scrollY = window.scrollY;
+
+          if (scrollY < window.innerHeight) {
+
+            const movement = scrollY * 0.035;
+
+            portrait.style.transform =
+              `scale(1.04) translate3d(0, ${movement}px, 0)`;
+
+          }
+
+          ticking = false;
+
+        });
+
+      },
+      { passive: true }
+    );
+  }
+
+
+  /* =========================================================
+     HERO BACKGROUND PARALLAX
+  ========================================================= */
+
+  const glowOne = $(".hero-glow-one");
+  const glowTwo = $(".hero-glow-two");
+
+  if (
+    !reducedMotion &&
+    (glowOne || glowTwo)
+  ) {
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        const scrollY = window.scrollY;
+
+        if (glowOne) {
+
+          glowOne.style.transform =
+            `translate3d(0, ${scrollY * 0.08}px, 0)`;
+
+        }
+
+        if (glowTwo) {
+
+          glowTwo.style.transform =
+            `translate3d(0, ${scrollY * -0.04}px, 0)`;
+
         }
 
       },
-      {
-        passive: true
-      }
+      { passive: true }
     );
   }
 
 
   /* =========================================================
-     HERO MOUSE PARALLAX
+     PROJECT VISUAL TILT
   ========================================================= */
 
-  const hero =
-    $(".hero");
+  const projectVisuals = $$(".project-visual");
 
+  if (!reducedMotion && finePointer) {
 
-  if (
-    hero &&
-    heroPortrait &&
-    finePointer &&
-    !reduceMotion
-  ) {
+    projectVisuals.forEach((visual) => {
 
-    hero.addEventListener(
-      "mousemove",
-      (event) => {
+      visual.addEventListener("mousemove", (event) => {
 
         const rect =
-          hero.getBoundingClientRect();
-
+          visual.getBoundingClientRect();
 
         const x =
-          (event.clientX - rect.left) /
-          rect.width -
-          0.5;
-
+          event.clientX - rect.left;
 
         const y =
-          (event.clientY - rect.top) /
-          rect.height -
-          0.5;
+          event.clientY - rect.top;
 
+        const rotateX =
+          ((y / rect.height) - 0.5) * -3;
 
-        heroPortrait.style.transform =
-          `translate3d(${x * 7}px, ${y * 7}px, 0)`;
+        const rotateY =
+          ((x / rect.width) - 0.5) * 3;
 
-      }
-    );
+        visual.style.transform =
+          `perspective(1000px)
+           rotateX(${rotateX}deg)
+           rotateY(${rotateY}deg)`;
+      });
 
+      visual.addEventListener("mouseleave", () => {
 
-    hero.addEventListener(
-      "mouseleave",
-      () => {
+        visual.style.transform =
+          "perspective(1000px) rotateX(0) rotateY(0)";
 
-        heroPortrait.style.transform =
-          "translate3d(0, 0, 0)";
+      });
 
-      }
-    );
+    });
   }
 
 
   /* =========================================================
-     WORK IMAGE HOVER
+     SKILL HOVER
   ========================================================= */
 
-  const workItems =
-    $$(".work-item");
+  const skills = $$(".skill");
 
+  skills.forEach((skill) => {
 
-  workItems.forEach((item) => {
+    skill.addEventListener("mouseenter", () => {
+      skill.classList.add("is-hovered");
+    });
 
-    const image =
-      $(".work-image-placeholder", item);
-
-
-    if (!image) {
-      return;
-    }
-
-
-    item.addEventListener(
-      "mousemove",
-      (event) => {
-
-        if (!finePointer || reduceMotion) {
-          return;
-        }
-
-
-        const rect =
-          item.getBoundingClientRect();
-
-
-        const x =
-          (event.clientX - rect.left) /
-          rect.width -
-          0.5;
-
-
-        const y =
-          (event.clientY - rect.top) /
-          rect.height -
-          0.5;
-
-
-        image.style.transform =
-          `scale(1.025) translate3d(${x * 7}px, ${y * 7}px, 0)`;
-
-      }
-    );
-
-
-    item.addEventListener(
-      "mouseleave",
-      () => {
-
-        image.style.transform =
-          "scale(1) translate3d(0, 0, 0)";
-
-      }
-    );
+    skill.addEventListener("mouseleave", () => {
+      skill.classList.remove("is-hovered");
+    });
 
   });
-
-
-  /* =========================================================
-     CONTACT ROWS
-  ========================================================= */
-
-  const contactRows =
-    $$(".contact-row");
-
-
-  contactRows.forEach((row) => {
-
-    const arrow =
-      $("b", row);
-
-
-    row.addEventListener(
-      "mousemove",
-      (event) => {
-
-        if (
-          !arrow ||
-          !finePointer ||
-          reduceMotion
-        ) {
-          return;
-        }
-
-
-        const rect =
-          row.getBoundingClientRect();
-
-
-        const x =
-          (event.clientX - rect.left) /
-          rect.width -
-          0.5;
-
-
-        const y =
-          (event.clientY - rect.top) /
-          rect.height -
-          0.5;
-
-
-        arrow.style.transform =
-          `translate(${x * 8}px, ${y * 8}px)`;
-
-      }
-    );
-
-
-    row.addEventListener(
-      "mouseleave",
-      () => {
-
-        if (!arrow) {
-          return;
-        }
-
-
-        arrow.style.transform =
-          "translate(0, 0)";
-
-      }
-    );
-
-  });
-
-
-  /* =========================================================
-     MAGNETIC PROFILE BUTTON
-  ========================================================= */
-
-  const profileButton =
-    $(".profile-button");
-
-
-  if (
-    profileButton &&
-    finePointer &&
-    !reduceMotion
-  ) {
-
-    profileButton.addEventListener(
-      "mousemove",
-      (event) => {
-
-        const rect =
-          profileButton.getBoundingClientRect();
-
-
-        const x =
-          event.clientX -
-          rect.left -
-          rect.width / 2;
-
-
-        const y =
-          event.clientY -
-          rect.top -
-          rect.height / 2;
-
-
-        profileButton.style.transform =
-          `translate(${x * 0.08}px, ${y * 0.08}px)`;
-
-      }
-    );
-
-
-    profileButton.addEventListener(
-      "mouseleave",
-      () => {
-
-        profileButton.style.transform =
-          "translate(0, 0)";
-
-      }
-    );
-
-  }
 
 
   /* =========================================================
      EXTERNAL LINKS
   ========================================================= */
 
-  const externalLinks =
-    $$(
-      'a[href^="http://"], a[href^="https://"]'
-    );
-
+  const externalLinks = $$(
+    'a[href^="http://"], a[href^="https://"]'
+  );
 
   externalLinks.forEach((link) => {
 
@@ -665,14 +440,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     RESIZE SAFETY
+     ESCAPE KEY
   ========================================================= */
 
-  window.addEventListener(
-    "resize",
-    () => {
+  document.addEventListener(
+    "keydown",
+    (event) => {
 
-      if (window.innerWidth > 700) {
+      if (event.key === "Escape") {
         closeMenu();
       }
 
@@ -681,35 +456,48 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     IMAGE LOAD STATE
+     RESIZE SAFETY
   ========================================================= */
 
-  const images =
-    $$("img");
+  window.addEventListener(
+    "resize",
+    () => {
 
+      if (window.innerWidth > 1000) {
+        closeMenu();
+      }
+
+    }
+  );
+
+
+  /* =========================================================
+     CURRENT YEAR
+  ========================================================= */
+
+  const yearElements = $$("[data-year]");
+
+  yearElements.forEach((element) => {
+
+    element.textContent =
+      new Date().getFullYear();
+
+  });
+
+
+  /* =========================================================
+     IMAGE FALLBACK
+  ========================================================= */
+
+  const images = $$("img");
 
   images.forEach((image) => {
 
-    if (image.complete) {
+    image.addEventListener("error", () => {
 
-      image.classList.add(
-        "loaded"
-      );
+      image.style.opacity = "0";
 
-    } else {
-
-      image.addEventListener(
-        "load",
-        () => {
-
-          image.classList.add(
-            "loaded"
-          );
-
-        }
-      );
-
-    }
+    });
 
   });
 
