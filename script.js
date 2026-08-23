@@ -1,579 +1,161 @@
 /* =========================================================
-   BIVEK RAY — PREMIUM PORTFOLIO
-   MASTER JAVASCRIPT
-========================================================= */
+   MOBILE SCROLL EXPERIENCE — TOUCH DEVICES
+   ========================================================= */
 
-document.addEventListener("DOMContentLoaded", () => {
-  "use strict";
+const mobileExperience =
+  window.matchMedia("(max-width: 700px)").matches &&
+  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-  /* =========================================================
-     HELPERS
-  ========================================================= */
+if (mobileExperience) {
 
-  const $ = (selector, parent = document) =>
-    parent.querySelector(selector);
+  const mobileRevealTargets = $$(
+    ".reveal, .venture-card, .journey-card, .achievement, .certificate, .skill, .project, .project-visual, .section-introduction, .intro-heading, .intro-copy, .skills-heading, .profile-layout, .contact-inner"
+  );
 
-  const $$ = (selector, parent = document) =>
-    [...parent.querySelectorAll(selector)];
+  /*
+     Mark elements for mobile animation
+  */
+  mobileRevealTargets.forEach((element, index) => {
+    if (!element.classList.contains("mobile-motion")) {
+      element.classList.add("mobile-motion");
+    }
 
-
-  /* =========================================================
-     PAGE LOADER
-  ========================================================= */
-
-  const loader = $(".loader");
-
-  if (loader) {
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        loader.classList.add("loaded");
-      }, 500);
-    });
-  }
-
-
-   /* =========================================================
-     CUSTOM CURSOR
-  ========================================================= */
-
-  const cursorDot = $(".cursor-dot");
-  const cursorCircle = $(".cursor-circle");
-
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-
-  if (cursorDot && cursorCircle && finePointer) {
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let circleX = mouseX;
-    let circleY = mouseY;
-
-    cursorDot.style.willChange = "transform";
-    cursorCircle.style.willChange = "transform";
-
-    document.addEventListener(
-      "mousemove",
-      (event) => {
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-      },
-      { passive: true }
+    element.style.setProperty(
+      "--mobile-delay",
+      `${Math.min(index * 45, 300)}ms`
     );
+  });
 
-    const animateCursor = () => {
 
-      /* Instant-feeling main cursor */
-      cursorDot.style.transform =
-        `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+  /*
+     MOBILE INTERSECTION OBSERVER
 
-      /* Fast trailing circle */
-      circleX += (mouseX - circleX) * 0.42;
-      circleY += (mouseY - circleY) * 0.42;
+     More aggressive than the normal reveal observer.
+     Elements animate as soon as they meaningfully
+     enter the viewport.
+  */
 
-      cursorCircle.style.transform =
-        `translate3d(${circleX}px, ${circleY}px, 0) translate(-50%, -50%)`;
+  const mobileObserver = new IntersectionObserver(
+    (entries) => {
 
-      requestAnimationFrame(animateCursor);
-    };
+      entries.forEach((entry) => {
 
-    animateCursor();
+        if (!entry.isIntersecting) return;
 
-    const interactiveElements = $$(
-      "a, button, .project, .skill, .portrait-frame"
-    );
+        entry.target.classList.add("mobile-visible");
 
-    interactiveElements.forEach((element) => {
-
-      element.addEventListener("mouseenter", () => {
-        cursorCircle.classList.add("active");
       });
 
-      element.addEventListener("mouseleave", () => {
-        cursorCircle.classList.remove("active");
-      });
+    },
+    {
+      threshold: 0.08,
+      rootMargin: "0px 0px -8% 0px"
+    }
+  );
 
-    });
-  }
+
+  mobileRevealTargets.forEach((element) => {
+    mobileObserver.observe(element);
+  });
 
 
-  /* =========================================================
-     MOBILE MENU
-  ========================================================= */
+  /*
+     MOBILE SCROLL PARALLAX
 
-  const menuToggle = $(".menu-toggle");
-  const mobileNavigation = $(".mobile-navigation");
-  const mobileLinks = $$(".mobile-navigation a");
+     This gives the phone version movement while
+     scrolling instead of depending on mouse events.
+  */
 
-  const closeMenu = () => {
+  const mobileParallaxTargets = $$(
+    ".hero-glow-one, .hero-glow-two, .hero-grid, .portrait-frame img, .venture-visual, .sukoon-visual"
+  );
 
-    if (!menuToggle || !mobileNavigation) return;
+  let mobileParallaxTicking = false;
 
-    menuToggle.classList.remove("open");
-    mobileNavigation.classList.remove("open");
+  const updateMobileParallax = () => {
 
-    document.body.classList.remove("menu-open");
-  };
+    mobileParallaxTargets.forEach((element) => {
 
-  if (menuToggle && mobileNavigation) {
+      const rect = element.getBoundingClientRect();
 
-    menuToggle.addEventListener("click", () => {
+      const viewportCenter =
+        window.innerHeight / 2;
 
-      const isOpen =
-        mobileNavigation.classList.contains("open");
+      const elementCenter =
+        rect.top + rect.height / 2;
 
-      if (isOpen) {
+      const distance =
+        elementCenter - viewportCenter;
 
-        closeMenu();
+      const normalized =
+        Math.max(
+          -1,
+          Math.min(
+            1,
+            distance / window.innerHeight
+          )
+        );
 
-      } else {
 
-        menuToggle.classList.add("open");
-        mobileNavigation.classList.add("open");
+      if (element.classList.contains("hero-glow-one")) {
 
-        document.body.classList.add("menu-open");
+        element.style.transform =
+          `translate3d(0, ${normalized * -28}px, 0)`;
 
       }
 
-    });
 
-    mobileLinks.forEach((link) => {
+      else if (
+        element.classList.contains("hero-glow-two")
+      ) {
 
-      link.addEventListener("click", () => {
-        closeMenu();
-      });
+        element.style.transform =
+          `translate3d(0, ${normalized * 22}px, 0)`;
 
-    });
-  }
+      }
 
 
-  /* =========================================================
-     HEADER SHOW / HIDE
-  ========================================================= */
+      else if (
+        element.classList.contains("hero-grid")
+      ) {
 
-  const header = $(".header");
+        element.style.transform =
+          `translate3d(0, ${normalized * 12}px, 0)`;
 
-  if (header) {
+      }
 
-    let lastScroll = window.scrollY;
 
-    window.addEventListener(
-      "scroll",
-      () => {
-
-        const currentScroll = window.scrollY;
+      else if (
+        element.classList.contains("portrait-frame")
+          ||
+        element.tagName === "IMG"
+      ) {
 
         if (
-          currentScroll > 120 &&
-          currentScroll > lastScroll
+          element.closest(".portrait-frame")
         ) {
 
-          header.classList.add("hidden");
-
-        } else {
-
-          header.classList.remove("hidden");
+          element.style.transform =
+            `scale(1.06) translate3d(0, ${normalized * -18}px, 0)`;
 
         }
 
-        lastScroll = currentScroll;
-
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     SCROLL REVEAL
-  ========================================================= */
-
-  const revealElements = $$(".reveal");
-
-  if ("IntersectionObserver" in window) {
-
-    const observer = new IntersectionObserver(
-      (entries, observerInstance) => {
-
-        entries.forEach((entry) => {
-
-          if (entry.isIntersecting) {
-
-            entry.target.classList.add("visible");
-
-            observerInstance.unobserve(entry.target);
-
-          }
-
-        });
-
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -50px 0px"
-      }
-    );
-
-    revealElements.forEach((element) => {
-      observer.observe(element);
-    });
-
-  } else {
-
-    revealElements.forEach((element) => {
-      element.classList.add("visible");
-    });
-
-  }
-
-
-  /* =========================================================
-     STAGGERED REVEALS
-  ========================================================= */
-
-  const staggerGroups = $$(".stagger");
-
-  staggerGroups.forEach((group) => {
-
-    const children = [...group.children];
-
-    children.forEach((child, index) => {
-
-      child.style.transitionDelay =
-        `${index * 80}ms`;
-
-    });
-
-  });
-
-
-  /* =========================================================
-     SMOOTH ANCHOR SCROLL
-  ========================================================= */
-
-  const anchorLinks = $$('a[href^="#"]');
-
-  anchorLinks.forEach((link) => {
-
-    link.addEventListener("click", (event) => {
-
-      const targetId =
-        link.getAttribute("href");
-
-      if (!targetId || targetId === "#") return;
-
-      const target = $(targetId);
-
-      if (!target) return;
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
-      });
-
-    });
-
-  });
-
-
-  /* =========================================================
-     HERO IMAGE PARALLAX
-  ========================================================= */
-
-  const portrait = $(".portrait-frame img");
-
-  const reducedMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-  if (portrait && !reducedMotion) {
-
-    let ticking = false;
-
-    window.addEventListener(
-      "scroll",
-      () => {
-
-        if (ticking) return;
-
-        ticking = true;
-
-        requestAnimationFrame(() => {
-
-          const scrollY = window.scrollY;
-
-          if (scrollY < window.innerHeight) {
-
-            const movement = scrollY * 0.035;
-
-            portrait.style.transform =
-              `scale(1.04) translate3d(0, ${movement}px, 0)`;
-
-          }
-
-          ticking = false;
-
-        });
-
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     HERO BACKGROUND PARALLAX
-  ========================================================= */
-
-  const glowOne = $(".hero-glow-one");
-  const glowTwo = $(".hero-glow-two");
-
-  if (
-    !reducedMotion &&
-    (glowOne || glowTwo)
-  ) {
-
-    window.addEventListener(
-      "scroll",
-      () => {
-
-        const scrollY = window.scrollY;
-
-        if (glowOne) {
-
-          glowOne.style.transform =
-            `translate3d(0, ${scrollY * 0.08}px, 0)`;
-
-        }
-
-        if (glowTwo) {
-
-          glowTwo.style.transform =
-            `translate3d(0, ${scrollY * -0.04}px, 0)`;
-
-        }
-
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     PROJECT VISUAL TILT
-  ========================================================= */
-
-  const projectVisuals = $$(".project-visual");
-
-  if (!reducedMotion && finePointer) {
-
-    projectVisuals.forEach((visual) => {
-
-      visual.addEventListener("mousemove", (event) => {
-
-        const rect =
-          visual.getBoundingClientRect();
-
-        const x =
-          event.clientX - rect.left;
-
-        const y =
-          event.clientY - rect.top;
-
-        const rotateX =
-          ((y / rect.height) - 0.5) * -3;
-
-        const rotateY =
-          ((x / rect.width) - 0.5) * 3;
-
-        visual.style.transform =
-          `perspective(1000px)
-           rotateX(${rotateX}deg)
-           rotateY(${rotateY}deg)`;
-      });
-
-      visual.addEventListener("mouseleave", () => {
-
-        visual.style.transform =
-          "perspective(1000px) rotateX(0) rotateY(0)";
-
-      });
-
-    });
-  }
-
-
-  /* =========================================================
-     SKILL HOVER
-  ========================================================= */
-
-  const skills = $$(".skill");
-
-  skills.forEach((skill) => {
-
-    skill.addEventListener("mouseenter", () => {
-      skill.classList.add("is-hovered");
-    });
-
-    skill.addEventListener("mouseleave", () => {
-      skill.classList.remove("is-hovered");
-    });
-
-  });
-
-
-  /* =========================================================
-     EXTERNAL LINKS
-  ========================================================= */
-
-  const externalLinks = $$(
-    'a[href^="http://"], a[href^="https://"]'
-  );
-
-  externalLinks.forEach((link) => {
-
-    link.setAttribute(
-      "target",
-      "_blank"
-    );
-
-    link.setAttribute(
-      "rel",
-      "noopener noreferrer"
-    );
-
-  });
-
-
-  /* =========================================================
-     ESCAPE KEY
-  ========================================================= */
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      if (event.key === "Escape") {
-        closeMenu();
       }
 
-    }
-  );
 
+      else if (
+        element.classList.contains("venture-visual") ||
+        element.classList.contains("sukoon-visual")
+      ) {
 
-  /* =========================================================
-     RESIZE SAFETY
-  ========================================================= */
+        element.style.transform =
+          `translate3d(0, ${normalized * -12}px, 0)`;
 
-  window.addEventListener(
-    "resize",
-    () => {
-
-      if (window.innerWidth > 1000) {
-        closeMenu();
       }
-
-    }
-  );
-
-
-  /* =========================================================
-     CURRENT YEAR
-  ========================================================= */
-
-  const yearElements = $$("[data-year]");
-
-  yearElements.forEach((element) => {
-
-    element.textContent =
-      new Date().getFullYear();
-
-  });
-
-
-  /* =========================================================
-     IMAGE FALLBACK
-  ========================================================= */
-
-  const images = $$("img");
-
-  images.forEach((image) => {
-
-    image.addEventListener("error", () => {
-
-      image.style.opacity = "0";
 
     });
 
-  });
-
-
-  /* =========================================================
-     EXPERIENCE LAYER — ADVANCED INTERACTIONS
-  ========================================================= */
-
-  const root = document.documentElement;
-  const hero = $(".hero");
-
-  /* Scroll progress bar */
-  const progress = document.createElement("div");
-  progress.className = "scroll-progress";
-  document.body.appendChild(progress);
-
-
-  /* =========================================================
-     CINEMATIC PAGE ENTRANCE
-  ========================================================= */
-
-  window.addEventListener("load", () => {
-
-    setTimeout(() => {
-
-      hero?.classList.add("page-entered");
-
-    }, 80);
-
-  });
-
-
-  /* =========================================================
-     SCROLL PROGRESS + VELOCITY
-  ========================================================= */
-
-  let scrollTick = false;
-  let previousScroll = window.scrollY;
-
-  const updateScrollExperience = () => {
-
-    const maxScroll =
-      document.documentElement.scrollHeight -
-      window.innerHeight;
-
-    const ratio =
-      maxScroll > 0
-        ? window.scrollY / maxScroll
-        : 0;
-
-    progress.style.transform =
-      `scaleX(${Math.min(1, Math.max(0, ratio))})`;
-
-    const velocity =
-      Math.min(
-        2,
-        Math.abs(window.scrollY - previousScroll)
-      );
-
-    document.body.style.setProperty(
-      "--scroll-velocity",
-      velocity.toFixed(2)
-    );
-
-    previousScroll = window.scrollY;
-
-    scrollTick = false;
+    mobileParallaxTicking = false;
   };
 
 
@@ -581,430 +163,193 @@ document.addEventListener("DOMContentLoaded", () => {
     "scroll",
     () => {
 
-      if (!scrollTick) {
+      if (mobileParallaxTicking) return;
 
-        requestAnimationFrame(
-          updateScrollExperience
-        );
-
-        scrollTick = true;
-      }
-
-    },
-    { passive: true }
-  );
-
-
-  updateScrollExperience();
-
-
-   /* =========================================================
-     MOUSE-DRIVEN ATMOSPHERE
-     Throttled for better pointer performance
-  ========================================================= */
-
-  if (finePointer && !reducedMotion) {
-
-    let atmosphereX = 0;
-    let atmosphereY = 0;
-    let atmosphereFrame = false;
-
-    document.addEventListener(
-      "mousemove",
-      (event) => {
-
-        atmosphereX =
-          (event.clientX / window.innerWidth - 0.5) * 2;
-
-        atmosphereY =
-          (event.clientY / window.innerHeight - 0.5) * 2;
-
-        if (atmosphereFrame) return;
-
-        atmosphereFrame = true;
-
-        requestAnimationFrame(() => {
-
-          root.style.setProperty(
-            "--mouse-x",
-            atmosphereX.toFixed(3)
-          );
-
-          root.style.setProperty(
-            "--mouse-y",
-            atmosphereY.toFixed(3)
-          );
-
-          if (hero) {
-
-            hero.style.setProperty(
-              "--hero-mx",
-              `${atmosphereX * 12}px`
-            );
-
-            hero.style.setProperty(
-              "--hero-my",
-              `${atmosphereY * 12}px`
-            );
-
-          }
-
-          atmosphereFrame = false;
-
-        });
-
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     MAGNETIC BUTTONS
-  ========================================================= */
-
-  const magneticElements = $$(
-    ".button, .header-social, .footer-logo, .contact-links a, .project-link"
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    magneticElements.forEach((element) => {
-
-      element.classList.add("magnetic");
-
-      element.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            element.getBoundingClientRect();
-
-          const x =
-            event.clientX -
-            rect.left -
-            rect.width / 2;
-
-          const y =
-            event.clientY -
-            rect.top -
-            rect.height / 2;
-
-          const strength =
-            element.classList.contains("button")
-              ? 0.14
-              : 0.08;
-
-          element.style.transform =
-            `translate(
-              ${x * strength}px,
-              ${y * strength}px
-            )`;
-        }
-      );
-
-      element.addEventListener(
-        "mouseleave",
-        () => {
-
-          element.style.transform = "";
-
-        }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     3D CARDS
-  ========================================================= */
-
-  const tiltCards = $$(
-    '[data-tilt], .achievement, .certificate'
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    tiltCards.forEach((card) => {
-
-      card.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            card.getBoundingClientRect();
-
-          const px =
-            (event.clientX - rect.left) /
-            rect.width;
-
-          const py =
-            (event.clientY - rect.top) /
-            rect.height;
-
-          const rotateY =
-            (px - 0.5) * 5;
-
-          const rotateX =
-            (py - 0.5) * -5;
-
-          card.style.setProperty(
-            "--tilt-x",
-            `${rotateX}deg`
-          );
-
-          card.style.setProperty(
-            "--tilt-y",
-            `${rotateY}deg`
-          );
-
-          card.style.transform =
-            `perspective(1100px)
-             rotateX(${rotateX}deg)
-             rotateY(${rotateY}deg)
-             translateY(-6px)`;
-
-        }
-      );
-
-      card.addEventListener(
-        "mouseleave",
-        () => {
-
-          card.style.transform = "";
-
-        }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     SPOTLIGHT EFFECT
-  ========================================================= */
-
-  const spotlightCards = $$(
-    ".skill, .journey-card, .achievement, .certificate, .venture-card"
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    spotlightCards.forEach((card) => {
-
-      card.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            card.getBoundingClientRect();
-
-          card.style.setProperty(
-            "--spot-x",
-            `${event.clientX - rect.left}px`
-          );
-
-          card.style.setProperty(
-            "--spot-y",
-            `${event.clientY - rect.top}px`
-          );
-
-        },
-        { passive: true }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     SPOTLIGHT ACTIVE STATE
-  ========================================================= */
-
-  if (finePointer && !reducedMotion) {
-
-    spotlightCards.forEach((card) => {
-
-      card.addEventListener(
-        "mouseenter",
-        () => {
-
-          card.classList.add(
-            "spotlight-active"
-          );
-
-        }
-      );
-
-      card.addEventListener(
-        "mouseleave",
-        () => {
-
-          card.classList.remove(
-            "spotlight-active"
-          );
-
-        }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     ACTIVE SECTION NAVIGATION
-  ========================================================= */
-
-  const navTargets = [
-    "about",
-    "work",
-    "skills",
-    "journey",
-    "achievements",
-    "certifications",
-    "contact"
-  ]
-    .map((id) => document.getElementById(id))
-    .filter(Boolean);
-
-
-  const navLinks = $$(
-    'nav a[href^="#"], .mobile-navigation a[href^="#"]'
-  );
-
-
-  if (
-    "IntersectionObserver" in window &&
-    navTargets.length
-  ) {
-
-    const navObserver =
-      new IntersectionObserver(
-        (entries) => {
-
-          entries.forEach((entry) => {
-
-            if (!entry.isIntersecting) return;
-
-            const id =
-              `#${entry.target.id}`;
-
-            navLinks.forEach((link) => {
-
-              link.classList.toggle(
-                "current",
-                link.getAttribute("href") === id
-              );
-
-            });
-
-          });
-
-        },
-        {
-          rootMargin:
-            "-35% 0px -55% 0px",
-          threshold: 0
-        }
-      );
-
-
-    navTargets.forEach((section) => {
-
-      navObserver.observe(section);
-
-    });
-
-  }
-
-
-  /* =========================================================
-     DYNAMIC MARQUEE
-  ========================================================= */
-
-  const marqueeTrack =
-    $(".marquee-track");
-
-  let marqueeOffset = 0;
-  let marqueeLast = performance.now();
-
-
-  if (
-    marqueeTrack &&
-    !reducedMotion
-  ) {
-
-    const animateMarquee = (now) => {
-
-      const dt =
-        Math.min(
-          40,
-          now - marqueeLast
-        );
-
-      marqueeLast = now;
-
-
-      const velocity =
-        Number(
-          document.body.style
-            .getPropertyValue(
-              "--scroll-velocity"
-            )
-        ) || 0;
-
-
-      marqueeOffset -=
-        dt *
-        (
-          0.012 +
-          velocity * 0.003
-        );
-
-
-      if (
-        Math.abs(marqueeOffset) >
-        marqueeTrack.scrollWidth / 2
-      ) {
-
-        marqueeOffset = 0;
-
-      }
-
-
-      marqueeTrack.style.transform =
-        `translate3d(
-          ${marqueeOffset}px,
-          0,
-          0
-        )`;
-
+      mobileParallaxTicking = true;
 
       requestAnimationFrame(
-        animateMarquee
+        updateMobileParallax
+      );
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  updateMobileParallax();
+
+
+  /*
+     SCROLL VELOCITY CLASS
+
+     Adds a little extra movement when the user
+     scrolls faster.
+  */
+
+  let mobileLastScroll =
+    window.scrollY;
+
+  let mobileVelocityTicking = false;
+
+  const updateMobileVelocity = () => {
+
+    const currentScroll =
+      window.scrollY;
+
+    const velocity =
+      Math.abs(
+        currentScroll -
+        mobileLastScroll
+      );
+
+    document.body.style.setProperty(
+      "--mobile-scroll-speed",
+      Math.min(velocity, 30).toFixed(2)
+    );
+
+    mobileLastScroll =
+      currentScroll;
+
+    mobileVelocityTicking = false;
+  };
+
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (mobileVelocityTicking) return;
+
+      mobileVelocityTicking = true;
+
+      requestAnimationFrame(
+        updateMobileVelocity
+      );
+
+    },
+    {
+      passive: true
+    }
+  );
+
+
+  /*
+     TOUCH FEEDBACK
+
+     Cards slightly react when touched.
+  */
+
+  const touchCards = $$(
+    ".venture-card, .journey-card, .achievement, .certificate, .skill"
+  );
+
+  touchCards.forEach((card) => {
+
+    card.addEventListener(
+      "touchstart",
+      () => {
+
+        card.classList.add(
+          "mobile-touch-active"
+        );
+
+      },
+      {
+        passive: true
+      }
+    );
+
+
+    card.addEventListener(
+      "touchend",
+      () => {
+
+        setTimeout(() => {
+
+          card.classList.remove(
+            "mobile-touch-active"
+          );
+
+        }, 180);
+
+      },
+      {
+        passive: true
+      }
+    );
+
+  });
+
+
+  /*
+     MOBILE MARQUEE
+
+     Keeps the marquee moving even when
+     desktop mouse/hover interactions are absent.
+  */
+
+  const mobileMarquee =
+    $(".marquee-track");
+
+  if (mobileMarquee) {
+
+    let offset = 0;
+
+    let lastTime =
+      performance.now();
+
+    const animateMobileMarquee = (
+      currentTime
+    ) => {
+
+      const delta =
+        Math.min(
+          40,
+          currentTime - lastTime
+        );
+
+      lastTime =
+        currentTime;
+
+      offset -=
+        delta * 0.018;
+
+      const halfWidth =
+        mobileMarquee.scrollWidth / 2;
+
+      if (
+        Math.abs(offset) >=
+        halfWidth
+      ) {
+        offset = 0;
+      }
+
+      mobileMarquee.style.transform =
+        `translate3d(${offset}px, 0, 0)`;
+
+      requestAnimationFrame(
+        animateMobileMarquee
       );
 
     };
 
-
     requestAnimationFrame(
-      animateMarquee
+      animateMobileMarquee
     );
 
   }
 
 
-  /* =========================================================
-     PAGE READY
-  ========================================================= */
+  /*
+     INITIAL UPDATE
+  */
 
-  document.documentElement.classList.add(
-    "js-ready"
-  );
+  requestAnimationFrame(() => {
 
-});
+    updateMobileParallax();
+
+  });
+
+}
