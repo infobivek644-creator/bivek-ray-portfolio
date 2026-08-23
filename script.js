@@ -32,7 +32,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
 
-  /* =========================================================
+   /* =========================================================
      CUSTOM CURSOR
   ========================================================= */
 
@@ -49,20 +49,30 @@ document.addEventListener("DOMContentLoaded", () => {
     let circleX = mouseX;
     let circleY = mouseY;
 
-    document.addEventListener("mousemove", (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+    cursorDot.style.willChange = "transform";
+    cursorCircle.style.willChange = "transform";
 
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
-    });
+    document.addEventListener(
+      "mousemove",
+      (event) => {
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+      },
+      { passive: true }
+    );
 
     const animateCursor = () => {
-      circleX += (mouseX - circleX) * 0.13;
-      circleY += (mouseY - circleY) * 0.13;
 
-      cursorCircle.style.left = `${circleX}px`;
-      cursorCircle.style.top = `${circleY}px`;
+      /* Instant-feeling main cursor */
+      cursorDot.style.transform =
+        `translate3d(${mouseX}px, ${mouseY}px, 0) translate(-50%, -50%)`;
+
+      /* Fast trailing circle */
+      circleX += (mouseX - circleX) * 0.42;
+      circleY += (mouseY - circleY) * 0.42;
+
+      cursorCircle.style.transform =
+        `translate3d(${circleX}px, ${circleY}px, 0) translate(-50%, -50%)`;
 
       requestAnimationFrame(animateCursor);
     };
@@ -588,45 +598,60 @@ document.addEventListener("DOMContentLoaded", () => {
   updateScrollExperience();
 
 
-  /* =========================================================
+   /* =========================================================
      MOUSE-DRIVEN ATMOSPHERE
+     Throttled for better pointer performance
   ========================================================= */
 
   if (finePointer && !reducedMotion) {
+
+    let atmosphereX = 0;
+    let atmosphereY = 0;
+    let atmosphereFrame = false;
 
     document.addEventListener(
       "mousemove",
       (event) => {
 
-        const x =
+        atmosphereX =
           (event.clientX / window.innerWidth - 0.5) * 2;
 
-        const y =
+        atmosphereY =
           (event.clientY / window.innerHeight - 0.5) * 2;
 
-        root.style.setProperty(
-          "--mouse-x",
-          x.toFixed(3)
-        );
+        if (atmosphereFrame) return;
 
-        root.style.setProperty(
-          "--mouse-y",
-          y.toFixed(3)
-        );
+        atmosphereFrame = true;
 
-        if (hero) {
+        requestAnimationFrame(() => {
 
-          hero.style.setProperty(
-            "--hero-mx",
-            `${x * 12}px`
+          root.style.setProperty(
+            "--mouse-x",
+            atmosphereX.toFixed(3)
           );
 
-          hero.style.setProperty(
-            "--hero-my",
-            `${y * 12}px`
+          root.style.setProperty(
+            "--mouse-y",
+            atmosphereY.toFixed(3)
           );
 
-        }
+          if (hero) {
+
+            hero.style.setProperty(
+              "--hero-mx",
+              `${atmosphereX * 12}px`
+            );
+
+            hero.style.setProperty(
+              "--hero-my",
+              `${atmosphereY * 12}px`
+            );
+
+          }
+
+          atmosphereFrame = false;
+
+        });
 
       },
       { passive: true }
