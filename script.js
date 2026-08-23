@@ -11,7 +11,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const $$ = (selector, parent = document) =>
     [...parent.querySelectorAll(selector)];
 
-  const prefersReducedMotion = window.matchMedia(
+  const reduceMotion = window.matchMedia(
     "(prefers-reduced-motion: reduce)"
   ).matches;
 
@@ -31,7 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     setTimeout(() => {
       loader.classList.add("loaded");
-    }, 650);
+    }, 700);
   };
 
   if (document.readyState === "complete") {
@@ -50,7 +50,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const header = $(".site-header");
 
   let lastScroll = window.scrollY;
-  let ticking = false;
 
   const updateHeader = () => {
     if (!header) return;
@@ -63,24 +62,21 @@ document.addEventListener("DOMContentLoaded", () => {
       header.classList.remove("scrolled");
     }
 
-    if (currentScroll > 120 && currentScroll > lastScroll) {
+    if (
+      currentScroll > 120 &&
+      currentScroll > lastScroll
+    ) {
       header.classList.add("hidden");
     } else {
       header.classList.remove("hidden");
     }
 
     lastScroll = currentScroll;
-    ticking = false;
   };
 
   window.addEventListener(
     "scroll",
-    () => {
-      if (!ticking) {
-        window.requestAnimationFrame(updateHeader);
-        ticking = true;
-      }
-    },
+    updateHeader,
     { passive: true }
   );
 
@@ -101,17 +97,21 @@ document.addEventListener("DOMContentLoaded", () => {
     document.body.classList.remove("menu-open");
   };
 
-  const toggleMenu = () => {
-    if (!menuButton || !mobileMenu) return;
-
-    const open = mobileMenu.classList.toggle("open");
-
-    menuButton.classList.toggle("open", open);
-    document.body.classList.toggle("menu-open", open);
-  };
-
   if (menuButton && mobileMenu) {
-    menuButton.addEventListener("click", toggleMenu);
+    menuButton.addEventListener("click", () => {
+      const isOpen =
+        mobileMenu.classList.toggle("open");
+
+      menuButton.classList.toggle(
+        "open",
+        isOpen
+      );
+
+      document.body.classList.toggle(
+        "menu-open",
+        isOpen
+      );
+    });
 
     mobileLinks.forEach((link) => {
       link.addEventListener("click", closeMenu);
@@ -126,37 +126,42 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     SMOOTH ANCHOR SCROLL
+     SMOOTH SCROLL
   ========================================================= */
 
   $$('a[href^="#"]').forEach((link) => {
+
     link.addEventListener("click", (event) => {
-      const id = link.getAttribute("href");
+
+      const id =
+        link.getAttribute("href");
 
       if (!id || id === "#") return;
 
-      const target = document.querySelector(id);
+      const target =
+        document.querySelector(id);
 
       if (!target) return;
 
       event.preventDefault();
 
-      const headerHeight = header
-        ? header.offsetHeight
-        : 0;
+      const headerHeight =
+        header ? header.offsetHeight : 0;
 
-      const targetPosition =
+      const position =
         target.getBoundingClientRect().top +
         window.scrollY -
         headerHeight;
 
       window.scrollTo({
-        top: targetPosition,
-        behavior: prefersReducedMotion
+        top: position,
+        behavior: reduceMotion
           ? "auto"
           : "smooth"
       });
+
     });
+
   });
 
 
@@ -168,122 +173,62 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (
     revealElements.length &&
-    "IntersectionObserver" in window &&
-    !prefersReducedMotion
+    !reduceMotion &&
+    "IntersectionObserver" in window
   ) {
-    const revealObserver =
+
+    const observer =
       new IntersectionObserver(
         (entries, observer) => {
+
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
 
-            entry.target.classList.add("visible");
+            if (!entry.isIntersecting) {
+              return;
+            }
 
-            observer.unobserve(entry.target);
+            entry.target.classList.add(
+              "visible"
+            );
+
+            observer.unobserve(
+              entry.target
+            );
+
           });
+
         },
         {
-          threshold: 0.12,
-          rootMargin: "0px 0px -70px 0px"
+          threshold: 0.08,
+          rootMargin:
+            "0px 0px -80px 0px"
         }
       );
 
     revealElements.forEach((element) => {
-      revealObserver.observe(element);
+      observer.observe(element);
     });
+
   } else {
+
     revealElements.forEach((element) => {
       element.classList.add("visible");
     });
+
   }
 
 
   /* =========================================================
-     CUSTOM CURSOR
+     HERO INTRO ANIMATION
   ========================================================= */
 
-  const cursor = $(".cursor");
-
-  if (cursor && finePointer && !prefersReducedMotion) {
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-
-    document.addEventListener("mousemove", (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-    });
-
-    const renderCursor = () => {
-      cursorX +=
-        (mouseX - cursorX) * 0.18;
-
-      cursorY +=
-        (mouseY - cursorY) * 0.18;
-
-      cursor.style.left = `${cursorX}px`;
-      cursor.style.top = `${cursorY}px`;
-
-      requestAnimationFrame(renderCursor);
-    };
-
-    renderCursor();
-
-    const interactive = $$(
-      "a, button, .venture-card, .skill-item, .journey-card, .achievement, .certification, .portrait-frame"
-    );
-
-    interactive.forEach((element) => {
-      element.addEventListener("mouseenter", () => {
-        cursor.classList.add("active");
-      });
-
-      element.addEventListener("mouseleave", () => {
-        cursor.classList.remove("active");
-      });
-    });
-  }
+  document.documentElement.classList.add(
+    "js-ready"
+  );
 
 
   /* =========================================================
-     MAGNETIC BUTTONS
-  ========================================================= */
-
-  if (finePointer && !prefersReducedMotion) {
-    const magneticElements = $$(
-      ".primary-button, .header-cta, .light-button, .text-button"
-    );
-
-    magneticElements.forEach((element) => {
-      element.addEventListener("mousemove", (event) => {
-        const rect =
-          element.getBoundingClientRect();
-
-        const x =
-          event.clientX -
-          rect.left -
-          rect.width / 2;
-
-        const y =
-          event.clientY -
-          rect.top -
-          rect.height / 2;
-
-        element.style.transform =
-          `translate(${x * 0.12}px, ${y * 0.12}px)`;
-      });
-
-      element.addEventListener("mouseleave", () => {
-        element.style.transform = "";
-      });
-    });
-  }
-
-
-  /* =========================================================
-     HERO PARALLAX
+     HERO PHOTO
   ========================================================= */
 
   const hero = $(".hero");
@@ -292,103 +237,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   if (
     hero &&
-    !prefersReducedMotion &&
-    finePointer
+    portrait &&
+    finePointer &&
+    !reduceMotion
   ) {
-    hero.addEventListener("mousemove", (event) => {
-      const rect = hero.getBoundingClientRect();
 
-      const x =
-        (event.clientX - rect.left) /
-        rect.width -
-        0.5;
+    hero.addEventListener(
+      "mousemove",
+      (event) => {
 
-      const y =
-        (event.clientY - rect.top) /
-        rect.height -
-        0.5;
-
-      if (portrait) {
-        portrait.style.transform =
-          `scale(1.05)
-           translate3d(${x * 8}px, ${y * 8}px, 0)`;
-      }
-
-      if (heroCircle) {
-        heroCircle.style.transform =
-          `translate3d(${x * -20}px, ${y * -20}px, 0)
-           rotate(-10deg)`;
-      }
-    });
-
-    hero.addEventListener("mouseleave", () => {
-      if (portrait) {
-        portrait.style.transform =
-          "scale(1.05) translate3d(0,0,0)";
-      }
-
-      if (heroCircle) {
-        heroCircle.style.transform =
-          "translate3d(0,0,0) rotate(-10deg)";
-      }
-    });
-  }
-
-
-  /* =========================================================
-     SCROLL PARALLAX
-  ========================================================= */
-
-  const orbitElements = $$(".hero-leaf, .hero-circle-two");
-
-  if (
-    orbitElements.length &&
-    !prefersReducedMotion
-  ) {
-    let parallaxTicking = false;
-
-    const updateParallax = () => {
-      const scrollY = window.scrollY;
-
-      orbitElements.forEach((element, index) => {
-        const speed =
-          index % 2 === 0
-            ? 0.035
-            : -0.025;
-
-        element.style.translate =
-          `0 ${scrollY * speed}px`;
-      });
-
-      parallaxTicking = false;
-    };
-
-    window.addEventListener(
-      "scroll",
-      () => {
-        if (!parallaxTicking) {
-          requestAnimationFrame(updateParallax);
-          parallaxTicking = true;
-        }
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     IMAGE TILT
-  ========================================================= */
-
-  if (finePointer && !prefersReducedMotion) {
-    const cards = $$(
-      ".venture-card, .journey-card, .achievement"
-    );
-
-    cards.forEach((card) => {
-      card.addEventListener("mousemove", (event) => {
         const rect =
-          card.getBoundingClientRect();
+          hero.getBoundingClientRect();
 
         const x =
           (event.clientX - rect.left) /
@@ -400,97 +259,289 @@ document.addEventListener("DOMContentLoaded", () => {
           rect.height -
           0.5;
 
-        card.style.transform =
-          `perspective(900px)
-           rotateX(${y * -2.5}deg)
-           rotateY(${x * 2.5}deg)
-           translateY(-7px)`;
-      });
+        portrait.style.transform =
+          `scale(1.05)
+           translate3d(
+             ${x * 8}px,
+             ${y * 8}px,
+             0
+           )`;
 
-      card.addEventListener("mouseleave", () => {
-        card.style.transform = "";
-      });
-    });
+        if (heroCircle) {
+          heroCircle.style.transform =
+            `translate3d(
+              ${x * -20}px,
+              ${y * -20}px,
+              0
+            ) rotate(-10deg)`;
+        }
+
+      }
+    );
+
+    hero.addEventListener(
+      "mouseleave",
+      () => {
+
+        portrait.style.transform =
+          "scale(1.05) translate3d(0,0,0)";
+
+        if (heroCircle) {
+          heroCircle.style.transform =
+            "translate3d(0,0,0) rotate(-10deg)";
+        }
+
+      }
+    );
+
   }
 
 
   /* =========================================================
-     NUMBER COUNTER
+     PARALLAX
   ========================================================= */
 
-  const counters = $$("[data-count]");
+  const parallaxElements =
+    $$(".hero-leaf, .hero-circle-two");
 
   if (
-    counters.length &&
-    "IntersectionObserver" in window
+    parallaxElements.length &&
+    !reduceMotion
   ) {
-    const counterObserver =
-      new IntersectionObserver(
-        (entries, observer) => {
-          entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
 
-            const element = entry.target;
+    let ticking = false;
 
-            const target =
-              Number(element.dataset.count);
+    const updateParallax = () => {
 
-            if (!Number.isFinite(target)) {
-              observer.unobserve(element);
-              return;
-            }
+      const scrollY =
+        window.scrollY;
 
-            const duration =
-              prefersReducedMotion
-                ? 0
-                : 1300;
+      parallaxElements.forEach(
+        (element, index) => {
 
-            const startTime =
-              performance.now();
+          const speed =
+            index % 2 === 0
+              ? 0.035
+              : -0.025;
 
-            const animate = (currentTime) => {
-              const progress =
-                duration === 0
-                  ? 1
-                  : Math.min(
-                      (currentTime -
-                        startTime) /
-                        duration,
-                      1
-                    );
+          element.style.transform =
+            `translate3d(
+              0,
+              ${scrollY * speed}px,
+              0
+            )`;
 
-              const eased =
-                1 -
-                Math.pow(
-                  1 - progress,
-                  3
-                );
-
-              element.textContent =
-                Math.round(
-                  target * eased
-                );
-
-              if (progress < 1) {
-                requestAnimationFrame(
-                  animate
-                );
-              }
-            };
-
-            requestAnimationFrame(animate);
-
-            observer.unobserve(element);
-          });
-        },
-        {
-          threshold: 0.7
         }
       );
 
-    counters.forEach((counter) => {
-      counterObserver.observe(counter);
+      ticking = false;
+    };
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        if (ticking) return;
+
+        requestAnimationFrame(
+          updateParallax
+        );
+
+        ticking = true;
+
+      },
+      { passive: true }
+    );
+
+  }
+
+
+  /* =========================================================
+     CARD TILT
+  ========================================================= */
+
+  if (
+    finePointer &&
+    !reduceMotion
+  ) {
+
+    const cards = $$(
+      ".venture-card, .journey-card, .achievement, .certification"
+    );
+
+    cards.forEach((card) => {
+
+      card.addEventListener(
+        "mousemove",
+        (event) => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+          const x =
+            (event.clientX - rect.left) /
+            rect.width -
+            0.5;
+
+          const y =
+            (event.clientY - rect.top) /
+            rect.height -
+            0.5;
+
+          card.style.transform =
+            `perspective(1000px)
+             rotateX(${y * -2}deg)
+             rotateY(${x * 2}deg)
+             translateY(-6px)`;
+
+        }
+      );
+
+      card.addEventListener(
+        "mouseleave",
+        () => {
+          card.style.transform = "";
+        }
+      );
+
     });
+
+  }
+
+
+  /* =========================================================
+     MAGNETIC BUTTONS
+  ========================================================= */
+
+  if (
+    finePointer &&
+    !reduceMotion
+  ) {
+
+    const buttons = $$(
+      ".primary-button, .header-cta, .text-button"
+    );
+
+    buttons.forEach((button) => {
+
+      button.addEventListener(
+        "mousemove",
+        (event) => {
+
+          const rect =
+            button.getBoundingClientRect();
+
+          const x =
+            event.clientX -
+            rect.left -
+            rect.width / 2;
+
+          const y =
+            event.clientY -
+            rect.top -
+            rect.height / 2;
+
+          button.style.transform =
+            `translate(
+              ${x * 0.10}px,
+              ${y * 0.10}px
+            )`;
+
+        }
+      );
+
+      button.addEventListener(
+        "mouseleave",
+        () => {
+          button.style.transform = "";
+        }
+      );
+
+    });
+
+  }
+
+
+  /* =========================================================
+     CUSTOM CURSOR
+  ========================================================= */
+
+  const cursor = $(".cursor");
+
+  if (
+    cursor &&
+    finePointer &&
+    !reduceMotion
+  ) {
+
+    let mouseX =
+      window.innerWidth / 2;
+
+    let mouseY =
+      window.innerHeight / 2;
+
+    let cursorX = mouseX;
+    let cursorY = mouseY;
+
+    document.addEventListener(
+      "mousemove",
+      (event) => {
+
+        mouseX = event.clientX;
+        mouseY = event.clientY;
+
+      }
+    );
+
+    const renderCursor = () => {
+
+      cursorX +=
+        (mouseX - cursorX) * 0.18;
+
+      cursorY +=
+        (mouseY - cursorY) * 0.18;
+
+      cursor.style.left =
+        `${cursorX}px`;
+
+      cursor.style.top =
+        `${cursorY}px`;
+
+      requestAnimationFrame(
+        renderCursor
+      );
+
+    };
+
+    renderCursor();
+
+    const interactive =
+      $$(
+        "a, button, .venture-card, .skill-item, .journey-card, .achievement, .certification, .portrait-frame"
+      );
+
+    interactive.forEach((element) => {
+
+      element.addEventListener(
+        "mouseenter",
+        () => {
+          cursor.classList.add(
+            "active"
+          );
+        }
+      );
+
+      element.addEventListener(
+        "mouseleave",
+        () => {
+          cursor.classList.remove(
+            "active"
+          );
+        }
+      );
+
+    });
+
   }
 
 
@@ -498,39 +549,43 @@ document.addEventListener("DOMContentLoaded", () => {
      ACTIVE NAVIGATION
   ========================================================= */
 
-  const sections = $$(
-    "section[id]"
-  );
+  const sections =
+    $$("section[id]");
 
-  const navLinks = $$(
-    '.desktop-nav a[href^="#"]'
-  );
+  const navLinks =
+    $$('.desktop-nav a[href^="#"]');
 
   if (
     sections.length &&
     navLinks.length &&
     "IntersectionObserver" in window
   ) {
-    const sectionObserver =
+
+    const navObserver =
       new IntersectionObserver(
         (entries) => {
+
           entries.forEach((entry) => {
-            if (!entry.isIntersecting) return;
+
+            if (!entry.isIntersecting) {
+              return;
+            }
 
             const id =
-              entry.target.getAttribute("id");
+              entry.target.id;
 
             navLinks.forEach((link) => {
-              const matches =
-                link.getAttribute("href") ===
-                `#${id}`;
 
               link.classList.toggle(
                 "active",
-                matches
+                link.getAttribute("href") ===
+                  `#${id}`
               );
+
             });
+
           });
+
         },
         {
           rootMargin:
@@ -539,38 +594,9 @@ document.addEventListener("DOMContentLoaded", () => {
       );
 
     sections.forEach((section) => {
-      sectionObserver.observe(section);
+      navObserver.observe(section);
     });
-  }
 
-
-  /* =========================================================
-     HOVER IMAGE / CARD GLOW
-  ========================================================= */
-
-  if (finePointer) {
-    $$(".venture-card").forEach((card) => {
-      card.addEventListener("mousemove", (event) => {
-        const rect =
-          card.getBoundingClientRect();
-
-        const x =
-          event.clientX - rect.left;
-
-        const y =
-          event.clientY - rect.top;
-
-        card.style.setProperty(
-          "--mouse-x",
-          `${x}px`
-        );
-
-        card.style.setProperty(
-          "--mouse-y",
-          `${y}px`
-        );
-      });
-    });
   }
 
 
@@ -581,6 +607,7 @@ document.addEventListener("DOMContentLoaded", () => {
   $$(
     'a[href^="http://"], a[href^="https://"]'
   ).forEach((link) => {
+
     link.setAttribute(
       "target",
       "_blank"
@@ -590,6 +617,7 @@ document.addEventListener("DOMContentLoaded", () => {
       "rel",
       "noopener noreferrer"
     );
+
   });
 
 
@@ -597,29 +625,27 @@ document.addEventListener("DOMContentLoaded", () => {
      CURRENT YEAR
   ========================================================= */
 
-  $$("[data-year]").forEach((element) => {
-    element.textContent =
-      new Date().getFullYear();
-  });
+  $$("[data-year]").forEach(
+    (element) => {
+      element.textContent =
+        new Date().getFullYear();
+    }
+  );
 
 
   /* =========================================================
      RESIZE
   ========================================================= */
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 760) {
-      closeMenu();
+  window.addEventListener(
+    "resize",
+    () => {
+
+      if (window.innerWidth > 760) {
+        closeMenu();
+      }
+
     }
-  });
-
-
-  /* =========================================================
-     PAGE READY
-  ========================================================= */
-
-  document.documentElement.classList.add(
-    "js-ready"
   );
 
 });
