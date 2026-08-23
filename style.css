@@ -2887,3 +2887,34 @@ img {
   }
 
 }
+/* =========================================================
+   HERO PHOTO — VISIBILITY FIX
+========================================================= */
+
+.hero-visual.reveal {
+  clip-path: inset(0 0 0 0) !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  transform: none !important;
+}
+
+.portrait-frame {
+  position: relative;
+  overflow: hidden;
+  z-index: 3;
+}
+
+.portrait {
+  position: relative;
+  z-index: 5;
+
+  display: block;
+  width: 100%;
+  height: 100%;
+
+  object-fit: cover;
+  object-position: center;
+
+  opacity: 1 !important;
+  visibility: visible !important;
+}
