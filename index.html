@@ -10,18 +10,27 @@
 
   <meta
     name="description"
-    content="Bivek Ray — Founder, entrepreneur and creative builder."
+    content="Bivek Ray — Founder, creative entrepreneur and builder."
   >
 
-  <meta name="author" content="Bivek Ray">
+  <meta
+    name="author"
+    content="Bivek Ray"
+  >
 
-  <title>Bivek Ray — Founder / Builder</title>
+  <meta
+    name="theme-color"
+    content="#f4f1eb"
+  >
 
+  <title>Bivek Ray — Founder & Builder</title>
+
+  <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
   <link
-    href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;1,400;1,500&display=swap"
+    href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap"
     rel="stylesheet"
   >
 
@@ -30,35 +39,50 @@
 
 <body>
 
-  <!-- =====================================================
-       PAGE TRANSITION
-  ====================================================== -->
+  <!-- =========================================
+       LOADER
+  ========================================== -->
 
-  <div class="page-transition" id="pageTransition">
-    <span>BIVEK RAY</span>
+  <div class="loader" id="loader">
+
+    <div class="loader-content">
+
+      <span class="loader-label">
+        BIVEK RAY
+      </span>
+
+      <div class="loader-bar">
+        <span></span>
+      </div>
+
+      <span class="loader-status">
+        PERSONAL PORTFOLIO / 2026
+      </span>
+
+    </div>
+
   </div>
 
 
-  <!-- =====================================================
-       CURSOR
-  ====================================================== -->
+  <!-- =========================================
+       CUSTOM CURSOR
+  ========================================== -->
 
-  <div class="cursor" id="cursor">
-    <span></span>
-  </div>
+  <div class="cursor-dot" id="cursorDot"></div>
+  <div class="cursor-circle" id="cursorCircle"></div>
 
 
-  <!-- =====================================================
-       NAVIGATION
-  ====================================================== -->
+  <!-- =========================================
+       HEADER
+  ========================================== -->
 
   <header class="header" id="header">
 
-    <a href="#home" class="logo">
-      B / R
+    <a href="#top" class="logo">
+      BR<span>.</span>
     </a>
 
-    <nav class="desktop-nav">
+    <nav class="desktop-navigation">
 
       <a href="#about">
         About
@@ -68,8 +92,8 @@
         Work
       </a>
 
-      <a href="#perspective">
-        Perspective
+      <a href="#skills">
+        Skills
       </a>
 
       <a href="#contact">
@@ -82,17 +106,17 @@
       href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
       target="_blank"
       rel="noopener noreferrer"
-      class="header-link"
+      class="header-social"
     >
-      LinkedIn
-      <span>↗</span>
+      LinkedIn ↗
     </a>
 
     <button
-      class="mobile-trigger"
-      id="mobileTrigger"
+      class="menu-toggle"
+      id="menuToggle"
       type="button"
-      aria-label="Open menu"
+      aria-label="Open navigation"
+      aria-expanded="false"
     >
       <span></span>
       <span></span>
@@ -101,63 +125,40 @@
   </header>
 
 
-  <!-- =====================================================
-       MOBILE NAV
-  ====================================================== -->
+  <!-- =========================================
+       MOBILE NAVIGATION
+  ========================================== -->
 
   <div class="mobile-navigation" id="mobileNavigation">
 
-    <div class="mobile-navigation-top">
-      <span>MENU</span>
-      <span>BR / 26</span>
-    </div>
+    <div class="mobile-navigation-inner">
 
-    <nav>
-
-      <a href="#home">
-        <small>00</small>
-        <strong>Home</strong>
-        <span>↗</span>
-      </a>
+      <span class="mobile-label">
+        NAVIGATION
+      </span>
 
       <a href="#about">
-        <small>01</small>
-        <strong>About</strong>
-        <span>↗</span>
+        01 — About
       </a>
 
       <a href="#work">
-        <small>02</small>
-        <strong>Work</strong>
-        <span>↗</span>
+        02 — Work
       </a>
 
-      <a href="#perspective">
-        <small>03</small>
-        <strong>Perspective</strong>
-        <span>↗</span>
+      <a href="#skills">
+        03 — Skills
       </a>
 
       <a href="#contact">
-        <small>04</small>
-        <strong>Contact</strong>
-        <span>↗</span>
+        04 — Contact
       </a>
-
-    </nav>
-
-    <div class="mobile-navigation-bottom">
-
-      <span>
-        FOUNDER / BUILDER
-      </span>
 
       <a
         href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
         target="_blank"
         rel="noopener noreferrer"
       >
-        LINKEDIN ↗
+        LinkedIn ↗
       </a>
 
     </div>
@@ -165,85 +166,114 @@
   </div>
 
 
-  <!-- =====================================================
+  <!-- =========================================
        MAIN
-  ====================================================== -->
+  ========================================== -->
 
-  <main id="home">
+  <main id="top">
 
 
-    <!-- ===================================================
+    <!-- =======================================
          HERO
-    ==================================================== -->
+    ======================================== -->
 
     <section class="hero">
 
-      <div class="hero-noise"></div>
+      <div class="hero-background">
 
-      <div class="hero-top">
+        <div class="hero-glow hero-glow-one"></div>
+        <div class="hero-glow hero-glow-two"></div>
 
-        <div class="hero-index">
-          <span>01</span>
-          <span>PERSONAL PORTFOLIO</span>
-        </div>
-
-        <div class="hero-date">
-          2026
-        </div>
+        <div class="hero-grid"></div>
 
       </div>
 
 
-      <div class="hero-layout">
+      <div class="hero-top">
 
-        <div class="hero-copy">
+        <span>
+          FOUNDER / BUILDER
+        </span>
 
-          <div class="hero-kicker reveal">
-            FOUNDER · ENTREPRENEUR · BUILDER
-          </div>
+        <span>
+          INDIA — 2026
+        </span>
 
-          <h1 class="hero-title reveal">
+      </div>
 
-            <span>Bivek</span>
 
-            <span class="hero-title-last">
-              <i>Ray.</i>
-            </span>
+      <div class="hero-main">
+
+        <div class="hero-introduction">
+
+          <span class="hero-kicker">
+            HELLO, I'M BIVEK
+          </span>
+
+          <h1>
+
+            I build
+            <em>brands,</em>
+
+            <br>
+
+            experiences &
+            <strong>ideas.</strong>
 
           </h1>
 
-          <div class="hero-intro reveal">
+          <p>
+            Founder and creative entrepreneur focused on
+            building ambitious ventures, meaningful
+            experiences and brands people remember.
+          </p>
 
-            <p>
-              I build companies, experiences and ideas
-              with the intention of making them matter.
-            </p>
+
+          <div class="hero-actions">
+
+            <a
+              href="#work"
+              class="button button-primary"
+            >
+              Explore my work
+              <span>↘</span>
+            </a>
+
+            <a
+              href="#contact"
+              class="button button-text"
+            >
+              Let's talk
+              <span>↗</span>
+            </a>
 
           </div>
 
         </div>
 
 
-        <div class="hero-portrait reveal">
+        <div class="hero-portrait">
 
           <div class="portrait-frame">
 
             <img
               src="bivek.jpeg"
               alt="Bivek Ray"
+              loading="eager"
             >
 
-            <div class="portrait-gradient"></div>
+            <div class="portrait-overlay"></div>
 
             <div class="portrait-caption">
-              <span>PORTRAIT / 001</span>
-              <span>BR</span>
+              <span>01</span>
+              <span>BIVEK RAY</span>
             </div>
 
           </div>
 
           <div class="portrait-note">
-            Based in India
+            Building things<br>
+            worth remembering.
           </div>
 
         </div>
@@ -254,10 +284,10 @@
       <div class="hero-bottom">
 
         <span>
-          SCROLL
+          SCROLL TO EXPLORE
         </span>
 
-        <div class="hero-line"></div>
+        <span class="scroll-line"></span>
 
         <span>
           ↓
@@ -268,62 +298,86 @@
     </section>
 
 
-    <!-- ===================================================
+    <!-- =======================================
          INTRO
-    ==================================================== -->
+    ======================================== -->
 
-    <section class="about" id="about">
+    <section
+      class="intro section"
+      id="about"
+    >
 
-      <div class="section-marker">
+      <div class="section-meta">
         <span>01</span>
         <span>ABOUT</span>
       </div>
 
 
-      <div class="about-layout">
+      <div class="intro-layout">
 
-        <div class="about-statement reveal">
+        <div class="intro-heading">
 
-          <span class="serif-small">
-            A founder's note
+          <span class="small-label">
+            A LITTLE ABOUT ME
           </span>
 
           <h2>
-            I’m interested in
-            <em>building things</em>
-            that outlive the
-            moment they were made.
+
+            Curious
+            <br>
+
+            by nature.
+            <br>
+
+            <em>Relentless</em>
+            <br>
+
+            by choice.
+
           </h2>
 
         </div>
 
 
-        <div class="about-content reveal">
+        <div class="intro-copy">
 
-          <p class="about-lead">
-            I’m Bivek Ray — a founder and creative
-            builder exploring the space between
-            business, culture, experiences and ideas.
-          </p>
-
-          <div class="about-divider"></div>
-
-          <p>
-            My work is driven by curiosity.
-            I like understanding why people care
-            about something, finding a better way
-            to approach it and then turning that
-            thinking into something tangible.
+          <p class="intro-large">
+            I’m Bivek Ray — a founder, builder and
+            creative thinker interested in turning
+            ideas into something real.
           </p>
 
           <p>
-            I’m currently building ventures that sit
-            across experiences, influence, lifestyle
-            and creative entrepreneurship.
+            My work sits at the intersection of
+            entrepreneurship, creativity, branding,
+            experiences and execution.
           </p>
 
-          <div class="about-signature">
-            Bivek Ray
+          <p>
+            I enjoy taking something from an early
+            idea and shaping it into a brand, venture
+            or experience with a clear identity and
+            purpose.
+          </p>
+
+
+          <div class="intro-details">
+
+            <div>
+              <span>BASED IN</span>
+              <strong>INDIA</strong>
+            </div>
+
+            <div>
+              <span>FOCUS</span>
+              <strong>BUILDING</strong>
+            </div>
+
+            <div>
+              <span>APPROACH</span>
+              <strong>CREATIVE × STRATEGIC</strong>
+            </div>
+
           </div>
 
         </div>
@@ -333,505 +387,457 @@
     </section>
 
 
-    <!-- ===================================================
+    <!-- =======================================
          MARQUEE
-    ==================================================== -->
+    ======================================== -->
 
     <section class="marquee-section">
 
-      <div class="marquee">
+      <div class="marquee-track">
 
-        <span>
-          IDEAS
-        </span>
+        <span>IDEAS</span>
+        <i>✦</i>
 
-        <b>✦</b>
+        <span>BRANDS</span>
+        <i>✦</i>
 
-        <span>
-          PEOPLE
-        </span>
+        <span>EXPERIENCES</span>
+        <i>✦</i>
 
-        <b>✦</b>
+        <span>EXECUTION</span>
+        <i>✦</i>
 
-        <span>
-          CULTURE
-        </span>
+        <span>IDEAS</span>
+        <i>✦</i>
 
-        <b>✦</b>
-
-        <span>
-          EXECUTION
-        </span>
-
-        <b>✦</b>
-
-        <span>
-          IDEAS
-        </span>
-
-        <b>✦</b>
-
-        <span>
-          PEOPLE
-        </span>
-
-        <b>✦</b>
+        <span>BRANDS</span>
+        <i>✦</i>
 
       </div>
 
     </section>
 
 
-    <!-- ===================================================
+    <!-- =======================================
          WORK
-    ==================================================== -->
+    ======================================== -->
 
-    <section class="work" id="work">
+    <section
+      class="work section"
+      id="work"
+    >
 
-      <div class="section-marker dark">
+      <div class="section-meta">
         <span>02</span>
-        <span>SELECTED WORK</span>
+        <span>VENTURES / WORK</span>
       </div>
 
 
-      <div class="work-heading reveal">
+      <div class="section-introduction">
 
-        <div>
-          <span class="serif-small">
-            What I'm building
-          </span>
-        </div>
+        <span class="small-label">
+          WHAT I'M BUILDING
+        </span>
 
         <h2>
           Selected
           <em>ventures.</em>
         </h2>
 
-      </div>
-
-
-      <div class="work-grid">
-
-
-        <!-- FLARE -->
-
-        <a
-          href="https://flareevents.in"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="work-item work-featured reveal"
-        >
-
-          <div class="work-image">
-
-            <div class="work-image-placeholder flare-visual">
-
-              <span class="visual-word">
-                FLARE
-              </span>
-
-              <span class="visual-detail">
-                EXPERIENCE / INFLUENCE
-              </span>
-
-            </div>
-
-            <div class="work-number">
-              01
-            </div>
-
-          </div>
-
-          <div class="work-info">
-
-            <div>
-              <span class="work-type">
-                COMPANY
-              </span>
-
-              <h3>
-                FLARE
-              </h3>
-            </div>
-
-            <div class="work-description">
-
-              <p>
-                Building experiences, influence and
-                moments designed to connect people
-                with brands.
-              </p>
-
-              <span class="work-open">
-                VISIT
-                <b>↗</b>
-              </span>
-
-            </div>
-
-          </div>
-
-        </a>
-
-
-        <!-- SUKOON -->
-
-        <article class="work-item reveal">
-
-          <div class="work-image">
-
-            <div class="work-image-placeholder sukoon-visual">
-
-              <span class="visual-script">
-                Sukoon
-              </span>
-
-              <span class="visual-detail">
-                NATURE / LIFESTYLE
-              </span>
-
-            </div>
-
-            <div class="work-number">
-              02
-            </div>
-
-          </div>
-
-          <div class="work-info">
-
-            <div>
-              <span class="work-type">
-                VENTURE
-              </span>
-
-              <h3>
-                Sukoon
-              </h3>
-            </div>
-
-            <div class="work-description">
-
-              <p>
-                Exploring products and experiences
-                inspired by nature, wellbeing and
-                everyday calm.
-              </p>
-
-              <span class="work-status">
-                IN DEVELOPMENT
-              </span>
-
-            </div>
-
-          </div>
-
-        </article>
-
-
-        <!-- NEXT -->
-
-        <article class="work-item work-small reveal">
-
-          <div class="work-image">
-
-            <div class="work-image-placeholder next-visual">
-
-              <span>
-                03
-              </span>
-
-              <small>
-                SOMETHING NEW
-              </small>
-
-            </div>
-
-            <div class="work-number">
-              03
-            </div>
-
-          </div>
-
-          <div class="work-info">
-
-            <div>
-              <span class="work-type">
-                FUTURE
-              </span>
-
-              <h3>
-                Next.
-              </h3>
-            </div>
-
-            <div class="work-description">
-
-              <p>
-                New ideas are being explored.
-              </p>
-
-            </div>
-
-          </div>
-
-        </article>
+        <p>
+          A selection of brands and ventures that
+          represent what I'm interested in building.
+        </p>
 
       </div>
 
-    </section>
 
+      <!-- FLARE -->
 
-    <!-- ===================================================
-         PHILOSOPHY
-    ==================================================== -->
+      <article class="project project-flare">
 
-    <section class="philosophy" id="perspective">
-
-      <div class="section-marker dark">
-        <span>03</span>
-        <span>PERSPECTIVE</span>
-      </div>
-
-
-      <div class="philosophy-layout">
-
-        <div class="philosophy-heading reveal">
-
-          <span class="serif-small">
-            How I approach things
-          </span>
-
-          <h2>
-            Curiosity
-            before
-            <em>certainty.</em>
-          </h2>
-
+        <div class="project-index">
+          01
         </div>
 
 
-        <div class="philosophy-list">
+        <div class="project-visual">
 
-          <article class="philosophy-item reveal">
+          <div class="project-visual-content">
 
-            <span>01</span>
-
-            <div>
-
-              <h3>
-                CURIOUS
-              </h3>
-
-              <p>
-                Ask better questions before rushing
-                towards familiar answers.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="philosophy-item reveal">
-
-            <span>02</span>
-
-            <div>
-
-              <h3>
-                OBSERVANT
-              </h3>
-
-              <p>
-                Pay attention to people, culture,
-                behaviour and the details others miss.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="philosophy-item reveal">
-
-            <span>03</span>
-
-            <div>
-
-              <h3>
-                DECISIVE
-              </h3>
-
-              <p>
-                Once the direction is clear,
-                move instead of endlessly planning.
-              </p>
-
-            </div>
-
-          </article>
-
-
-          <article class="philosophy-item reveal">
-
-            <span>04</span>
-
-            <div>
-
-              <h3>
-                ADAPTIVE
-              </h3>
-
-              <p>
-                Treat every version as temporary
-                and keep improving it.
-              </p>
-
-            </div>
-
-          </article>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         LINKEDIN
-    ==================================================== -->
-
-    <section class="profile">
-
-      <div class="profile-inner reveal">
-
-        <div class="profile-top">
-
-          <span>
-            PROFESSIONAL PROFILE
-          </span>
-
-          <span>
-            04 / 04
-          </span>
-
-        </div>
-
-
-        <div class="profile-main">
-
-          <span class="serif-small">
-            Let's connect
-          </span>
-
-          <h2>
-            Good
-            <em>conversations</em>
-            start with
-            curiosity.
-          </h2>
-
-          <a
-            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="profile-button"
-          >
-            <span>
-              VIEW LINKEDIN
+            <span class="project-overline">
+              EVENTS / INFLUENCE / EXPERIENCES
             </span>
 
-            <b>
-              ↗
-            </b>
+            <h3>
+              FLARE
+            </h3>
 
-          </a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-    <!-- ===================================================
-         CONTACT
-    ==================================================== -->
-
-    <section class="contact" id="contact">
-
-      <div class="contact-watermark">
-        HELLO
-      </div>
-
-      <div class="section-marker">
-        <span>04</span>
-        <span>CONTACT</span>
-      </div>
-
-
-      <div class="contact-layout">
-
-        <div class="contact-heading reveal">
-
-          <span class="serif-small">
-            Have something interesting?
-          </span>
-
-          <h2>
-            Let's make
-            <em>something</em>
-            worth talking about.
-          </h2>
-
-        </div>
-
-
-        <div class="contact-details reveal">
-
-          <a
-            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="contact-row"
-          >
-
-            <span>
-              LINKEDIN
+            <span class="project-symbol">
+              ✦
             </span>
 
-            <strong>
-              Connect with me
-            </strong>
+          </div>
 
-            <b>
-              ↗
-            </b>
+        </div>
 
-          </a>
 
+        <div class="project-information">
+
+          <div>
+
+            <span class="project-type">
+              FOUNDER
+            </span>
+
+            <h3>
+              FLARE
+            </h3>
+
+          </div>
+
+          <p>
+            An experience and influence company
+            creating meaningful connections between
+            brands, people and moments.
+          </p>
 
           <a
             href="https://flareevents.in"
             target="_blank"
             rel="noopener noreferrer"
-            class="contact-row"
+            class="project-link"
           >
+            Visit FLARE
+            <span>↗</span>
+          </a>
 
-            <span>
-              COMPANY
+        </div>
+
+      </article>
+
+
+      <!-- SUKOON -->
+
+      <article class="project project-sukoon">
+
+        <div class="project-index">
+          02
+        </div>
+
+
+        <div class="project-visual sukoon-visual">
+
+          <div class="sukoon-logo-wrap">
+
+            <img
+              src="sukoon-logo.png"
+              alt="Sukoon By Nature logo"
+              loading="lazy"
+            >
+
+          </div>
+
+        </div>
+
+
+        <div class="project-information">
+
+          <div>
+
+            <span class="project-type">
+              CO-FOUNDER
             </span>
 
-            <strong>
-              FLARE
-            </strong>
+            <h3>
+              SUKOON
+            </h3>
 
-            <b>
-              ↗
-            </b>
+            <span class="project-subtitle">
+              BY NATURE
+            </span>
 
+          </div>
+
+          <p>
+            A nature-inspired venture exploring
+            products, wellbeing and everyday moments
+            of calm.
+          </p>
+
+          <span class="project-link project-link-disabled">
+            Coming soon
+            <span>→</span>
+          </span>
+
+        </div>
+
+      </article>
+
+    </section>
+
+
+    <!-- =======================================
+         SKILLS
+    ======================================== -->
+
+    <section
+      class="skills section"
+      id="skills"
+    >
+
+      <div class="section-meta">
+        <span>03</span>
+        <span>CAPABILITIES</span>
+      </div>
+
+
+      <div class="skills-layout">
+
+        <div class="skills-heading">
+
+          <span class="small-label">
+            WHAT I BRING
+          </span>
+
+          <h2>
+            Skills
+            <br>
+            with a
+            <br>
+            <em>builder's mindset.</em>
+          </h2>
+
+        </div>
+
+
+        <div class="skills-list">
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              01
+            </span>
+
+            <div>
+
+              <h3>
+                Entrepreneurship
+              </h3>
+
+              <p>
+                Turning ideas into ventures,
+                identifying opportunities and
+                thinking beyond the obvious.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              02
+            </span>
+
+            <div>
+
+              <h3>
+                Creative Direction
+              </h3>
+
+              <p>
+                Developing concepts, identities
+                and creative directions that give
+                ideas a distinctive point of view.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              03
+            </span>
+
+            <div>
+
+              <h3>
+                Brand Building
+              </h3>
+
+              <p>
+                Shaping positioning, visual direction
+                and experiences around a coherent
+                brand identity.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              04
+            </span>
+
+            <div>
+
+              <h3>
+                Event & Experience
+              </h3>
+
+              <p>
+                Designing memorable experiences
+                where people, brands and moments
+                come together.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              05
+            </span>
+
+            <div>
+
+              <h3>
+                Strategy
+              </h3>
+
+              <p>
+                Connecting creative thinking with
+                practical business objectives and
+                execution.
+              </p>
+
+            </div>
+
+          </div>
+
+
+          <div class="skill">
+
+            <span class="skill-number">
+              06
+            </span>
+
+            <div>
+
+              <h3>
+                Digital & Web
+              </h3>
+
+              <p>
+                Building digital experiences and
+                understanding how design, technology
+                and storytelling work together.
+              </p>
+
+            </div>
+
+          </div>
+
+
+        </div>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================
+         PHILOSOPHY
+    ======================================== -->
+
+    <section class="philosophy section">
+
+      <div class="philosophy-inner">
+
+        <span class="small-label">
+          MY APPROACH
+        </span>
+
+        <h2>
+
+          Don't just
+          <em>have ideas.</em>
+
+          <br>
+
+          Build them.
+
+        </h2>
+
+        <p>
+          Creativity matters.
+          But ideas only become valuable
+          when someone has the discipline
+          to execute them.
+        </p>
+
+      </div>
+
+    </section>
+
+
+    <!-- =======================================
+         PROFILE
+    ======================================== -->
+
+    <section class="profile section">
+
+      <div class="section-meta">
+        <span>04</span>
+        <span>PROFILE</span>
+      </div>
+
+
+      <div class="profile-layout">
+
+        <div>
+
+          <span class="small-label">
+            PROFESSIONAL
+          </span>
+
+          <h2>
+            Let's
+            <em>connect.</em>
+          </h2>
+
+        </div>
+
+
+        <div class="profile-copy">
+
+          <p>
+            For collaborations, opportunities,
+            partnerships or interesting ideas,
+            connect with me on LinkedIn.
+          </p>
+
+          <a
+            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-primary"
+          >
+            View LinkedIn
+            <span>↗</span>
           </a>
 
         </div>
@@ -841,57 +847,116 @@
     </section>
 
 
-    <!-- ===================================================
-         FOOTER
-    ==================================================== -->
+    <!-- =======================================
+         CONTACT
+    ======================================== -->
 
-    <footer class="footer">
+    <section
+      class="contact section"
+      id="contact"
+    >
 
-      <div class="footer-top">
-
-        <span>
-          BIVEK RAY
-        </span>
-
-        <span>
-          INDIA / 2026
-        </span>
-
+      <div class="contact-background">
+        <div></div>
       </div>
 
 
-      <div class="footer-center">
+      <div class="contact-inner">
 
-        <div class="footer-big">
-          Bivek
+        <span class="small-label">
+          HAVE SOMETHING IN MIND?
+        </span>
+
+        <h2>
+
+          Let's make
+          <br>
+
+          something
+          <em>interesting.</em>
+
+        </h2>
+
+
+        <div class="contact-links">
+
+          <a
+            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span>LinkedIn</span>
+            <span>↗</span>
+          </a>
+
+          <a href="#work">
+            <span>Explore Work</span>
+            <span>↗</span>
+          </a>
+
         </div>
 
-        <div class="footer-big italic">
-          Ray.
-        </div>
-
       </div>
 
+    </section>
 
-      <div class="footer-bottom">
-
-        <span>
-          © 2026 BIVEK RAY
-        </span>
-
-        <span>
-          PERSONAL PORTFOLIO
-        </span>
-
-        <a href="#home">
-          BACK TO TOP ↑
-        </a>
-
-      </div>
-
-    </footer>
 
   </main>
+
+
+  <!-- =========================================
+       FOOTER
+  ========================================== -->
+
+  <footer class="footer">
+
+    <div class="footer-top">
+
+      <a href="#top" class="footer-logo">
+        BIVEK RAY<span>.</span>
+      </a>
+
+      <span>
+        FOUNDER / BUILDER
+      </span>
+
+    </div>
+
+
+    <div class="footer-main">
+
+      <span>
+        BIVEK
+      </span>
+
+      <em>
+        RAY.
+      </em>
+
+    </div>
+
+
+    <div class="footer-bottom">
+
+      <span>
+        © 2026 Bivek Ray
+      </span>
+
+      <span>
+        India
+      </span>
+
+      <a
+        href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
+        target="_blank"
+        rel="noopener noreferrer"
+      >
+        LinkedIn ↗
+      </a>
+
+    </div>
+
+  </footer>
 
 
   <script src="script.js"></script>
