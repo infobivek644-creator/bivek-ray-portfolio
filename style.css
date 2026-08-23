@@ -49,7 +49,7 @@ body {
   color: var(--ink);
   font-family: var(--sans);
   overflow-x: hidden;
-  cursor: none;
+  cursor: auto;
 }
 
 body.menu-open {
@@ -179,59 +179,6 @@ img {
   }
 }
 
-
-/* =========================================================
-   CUSTOM CURSOR
-========================================================= */
-
-.cursor-dot,
-.cursor-circle {
-  position: fixed;
-
-  top: 0;
-  left: 0;
-
-  pointer-events: none;
-
-  z-index: 100000;
-
-  transform: translate(-50%, -50%);
-
-  will-change: transform;
-}
-
-.cursor-dot {
-  width: 6px;
-  height: 6px;
-
-  border-radius: 50%;
-
-  background: var(--orange);
-}
-
-.cursor-circle {
-  width: 34px;
-  height: 34px;
-
-  border: 1px solid rgba(101, 85, 111, 0.6);
-
-  border-radius: 50%;
-
-  transition:
-    width 0.35s var(--ease),
-    height 0.35s var(--ease),
-    background 0.35s ease,
-    border-color 0.35s ease;
-}
-
-.cursor-circle.active {
-  width: 58px;
-  height: 58px;
-
-  border-color: var(--violet);
-
-  background: rgba(101, 85, 111, 0.07);
-}
 
 
 /* =========================================================
@@ -1956,13 +1903,7 @@ img {
   body {
     cursor: auto;
   }
-
-  .cursor-dot,
-  .cursor-circle {
-    display: none;
-  }
-
-  .header {
+.header {
     height: 72px;
 
     padding: 0 22px;
@@ -2567,8 +2508,6 @@ html.js-ready .hero.page-entered .hero-portrait { opacity: 1; transform: transla
 .philosophy::after { content:"✦"; position:absolute; right:9%; top:18%; color:var(--orange-soft); font-size:24px; animation:starPulse 3s ease-in-out infinite; }
 @keyframes philosophyOrbit { from{transform:rotate(0deg) translateX(8px)} to{transform:rotate(360deg) translateX(8px)} }
 
-/* magnetic interaction fallback */
-.magnetic { will-change: transform; }
 
 /* contact becomes more alive */
 .contact-background div { animation: contactOrbit 14s linear infinite; }
@@ -2578,27 +2517,6 @@ html.js-ready .hero.page-entered .hero-portrait { opacity: 1; transform: transla
 
 
 
-/* interaction polish */
-.hero-glow-one { transform: translate3d(var(--hero-mx, 0), var(--hero-my, 0), 0); transition: transform 1.2s cubic-bezier(.22,1,.36,1); }
-.hero-glow-two { transform: translate3d(calc(var(--hero-mx, 0) * -.55), calc(var(--hero-my, 0) * -.55), 0); transition: transform 1.5s cubic-bezier(.22,1,.36,1); }
-.hero-grid { transform: translate3d(calc(var(--hero-mx, 0) * -.12), calc(var(--hero-my, 0) * -.12), 0); transition: transform 1.5s cubic-bezier(.22,1,.36,1); }
-.desktop-navigation a.current { color:var(--violet); }
-.desktop-navigation a.current::after { width:100%; }
-.mobile-navigation a.current { color:var(--orange); }
-.marquee-track { animation:none; will-change:transform; }
-.skill,.journey-card,.achievement,.certificate,.venture-card { isolation:isolate; }
-.skill::after,.journey-card::after,.achievement::after,.certificate::after,.venture-card::after {
-  content:"";
-  position:absolute;
-  inset:0;
-  z-index:-1;
-  pointer-events:none;
-  opacity:0;
-  background:radial-gradient(280px circle at var(--spot-x,50%) var(--spot-y,50%), rgba(216,121,63,.11), transparent 65%);
-  transition:opacity .35s ease;
-}
-.skill.spotlight-active::after,.journey-card.spotlight-active::after,.achievement.spotlight-active::after,.certificate.spotlight-active::after,.venture-card.spotlight-active::after { opacity:1; }
-.achievement,.certificate { will-change:transform; }
 
 /* responsive */
 @media (max-width:1000px) {
