@@ -1,6 +1,6 @@
 /* =========================================================
    BIVEK RAY — PREMIUM PORTFOLIO
-   MASTER JAVASCRIPT
+   FINAL JAVASCRIPT
 ========================================================= */
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -33,61 +33,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     CUSTOM CURSOR
-  ========================================================= */
-
-  const cursorDot = $(".cursor-dot");
-  const cursorCircle = $(".cursor-circle");
-
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-
-  if (cursorDot && cursorCircle && finePointer) {
-
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
-
-    let circleX = mouseX;
-    let circleY = mouseY;
-
-    document.addEventListener("mousemove", (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
-
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
-    });
-
-    const animateCursor = () => {
-      circleX += (mouseX - circleX) * 0.13;
-      circleY += (mouseY - circleY) * 0.13;
-
-      cursorCircle.style.left = `${circleX}px`;
-      cursorCircle.style.top = `${circleY}px`;
-
-      requestAnimationFrame(animateCursor);
-    };
-
-    animateCursor();
-
-    const interactiveElements = $$(
-      "a, button, .project, .skill, .portrait-frame"
-    );
-
-    interactiveElements.forEach((element) => {
-
-      element.addEventListener("mouseenter", () => {
-        cursorCircle.classList.add("active");
-      });
-
-      element.addEventListener("mouseleave", () => {
-        cursorCircle.classList.remove("active");
-      });
-
-    });
-  }
-
-
-  /* =========================================================
      MOBILE MENU
   ========================================================= */
 
@@ -96,43 +41,29 @@ document.addEventListener("DOMContentLoaded", () => {
   const mobileLinks = $$(".mobile-navigation a");
 
   const closeMenu = () => {
-
     if (!menuToggle || !mobileNavigation) return;
 
     menuToggle.classList.remove("open");
     mobileNavigation.classList.remove("open");
-
     document.body.classList.remove("menu-open");
   };
 
   if (menuToggle && mobileNavigation) {
-
     menuToggle.addEventListener("click", () => {
-
       const isOpen =
         mobileNavigation.classList.contains("open");
 
       if (isOpen) {
-
         closeMenu();
-
       } else {
-
         menuToggle.classList.add("open");
         mobileNavigation.classList.add("open");
-
         document.body.classList.add("menu-open");
-
       }
-
     });
 
     mobileLinks.forEach((link) => {
-
-      link.addEventListener("click", () => {
-        closeMenu();
-      });
-
+      link.addEventListener("click", closeMenu);
     });
   }
 
@@ -144,30 +75,33 @@ document.addEventListener("DOMContentLoaded", () => {
   const header = $(".header");
 
   if (header) {
-
     let lastScroll = window.scrollY;
+    let headerTicking = false;
+
+    const updateHeader = () => {
+      const currentScroll = window.scrollY;
+
+      if (
+        currentScroll > 120 &&
+        currentScroll > lastScroll
+      ) {
+        header.classList.add("hidden");
+      } else {
+        header.classList.remove("hidden");
+      }
+
+      lastScroll = currentScroll;
+      headerTicking = false;
+    };
 
     window.addEventListener(
       "scroll",
       () => {
+        if (headerTicking) return;
 
-        const currentScroll = window.scrollY;
+        headerTicking = true;
 
-        if (
-          currentScroll > 120 &&
-          currentScroll > lastScroll
-        ) {
-
-          header.classList.add("hidden");
-
-        } else {
-
-          header.classList.remove("hidden");
-
-        }
-
-        lastScroll = currentScroll;
-
+        requestAnimationFrame(updateHeader);
       },
       { passive: true }
     );
@@ -181,22 +115,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const revealElements = $$(".reveal");
 
   if ("IntersectionObserver" in window) {
-
     const observer = new IntersectionObserver(
       (entries, observerInstance) => {
-
         entries.forEach((entry) => {
+          if (!entry.isIntersecting) return;
 
-          if (entry.isIntersecting) {
+          entry.target.classList.add("visible");
 
-            entry.target.classList.add("visible");
-
-            observerInstance.unobserve(entry.target);
-
-          }
-
+          observerInstance.unobserve(entry.target);
         });
-
       },
       {
         threshold: 0.12,
@@ -207,13 +134,10 @@ document.addEventListener("DOMContentLoaded", () => {
     revealElements.forEach((element) => {
       observer.observe(element);
     });
-
   } else {
-
     revealElements.forEach((element) => {
       element.classList.add("visible");
     });
-
   }
 
 
@@ -224,16 +148,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const staggerGroups = $$(".stagger");
 
   staggerGroups.forEach((group) => {
-
-    const children = [...group.children];
-
-    children.forEach((child, index) => {
-
+    [...group.children].forEach((child, index) => {
       child.style.transitionDelay =
-        `${index * 80}ms`;
-
+        `${Math.min(index * 80, 500)}ms`;
     });
-
   });
 
 
@@ -244,9 +162,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const anchorLinks = $$('a[href^="#"]');
 
   anchorLinks.forEach((link) => {
-
     link.addEventListener("click", (event) => {
-
       const targetId =
         link.getAttribute("href");
 
@@ -262,52 +178,54 @@ document.addEventListener("DOMContentLoaded", () => {
         behavior: "smooth",
         block: "start"
       });
-
     });
-
   });
 
 
   /* =========================================================
-     HERO IMAGE PARALLAX
+     REDUCED MOTION
   ========================================================= */
-
-  const portrait = $(".portrait-frame img");
 
   const reducedMotion =
     window.matchMedia(
       "(prefers-reduced-motion: reduce)"
     ).matches;
 
-  if (portrait && !reducedMotion) {
 
+  /* =========================================================
+     HERO IMAGE PARALLAX
+  ========================================================= */
+
+  const portrait =
+    $(".portrait-frame img");
+
+  if (portrait && !reducedMotion) {
     let ticking = false;
+
+    const updatePortrait = () => {
+      const scrollY = window.scrollY;
+
+      if (scrollY < window.innerHeight) {
+        const movement =
+          scrollY * 0.035;
+
+        portrait.style.transform =
+          `scale(1.04) translate3d(0, ${movement}px, 0)`;
+      }
+
+      ticking = false;
+    };
 
     window.addEventListener(
       "scroll",
       () => {
-
         if (ticking) return;
 
         ticking = true;
 
-        requestAnimationFrame(() => {
-
-          const scrollY = window.scrollY;
-
-          if (scrollY < window.innerHeight) {
-
-            const movement = scrollY * 0.035;
-
-            portrait.style.transform =
-              `scale(1.04) translate3d(0, ${movement}px, 0)`;
-
-          }
-
-          ticking = false;
-
-        });
-
+        requestAnimationFrame(
+          updatePortrait
+        );
       },
       { passive: true }
     );
@@ -318,81 +236,47 @@ document.addEventListener("DOMContentLoaded", () => {
      HERO BACKGROUND PARALLAX
   ========================================================= */
 
-  const glowOne = $(".hero-glow-one");
-  const glowTwo = $(".hero-glow-two");
+  const glowOne =
+    $(".hero-glow-one");
+
+  const glowTwo =
+    $(".hero-glow-two");
 
   if (
     !reducedMotion &&
     (glowOne || glowTwo)
   ) {
+    let ticking = false;
+
+    const updateHeroBackground = () => {
+      const scrollY = window.scrollY;
+
+      if (glowOne) {
+        glowOne.style.transform =
+          `translate3d(0, ${scrollY * 0.08}px, 0)`;
+      }
+
+      if (glowTwo) {
+        glowTwo.style.transform =
+          `translate3d(0, ${scrollY * -0.04}px, 0)`;
+      }
+
+      ticking = false;
+    };
 
     window.addEventListener(
       "scroll",
       () => {
+        if (ticking) return;
 
-        const scrollY = window.scrollY;
+        ticking = true;
 
-        if (glowOne) {
-
-          glowOne.style.transform =
-            `translate3d(0, ${scrollY * 0.08}px, 0)`;
-
-        }
-
-        if (glowTwo) {
-
-          glowTwo.style.transform =
-            `translate3d(0, ${scrollY * -0.04}px, 0)`;
-
-        }
-
+        requestAnimationFrame(
+          updateHeroBackground
+        );
       },
       { passive: true }
     );
-  }
-
-
-  /* =========================================================
-     PROJECT VISUAL TILT
-  ========================================================= */
-
-  const projectVisuals = $$(".project-visual");
-
-  if (!reducedMotion && finePointer) {
-
-    projectVisuals.forEach((visual) => {
-
-      visual.addEventListener("mousemove", (event) => {
-
-        const rect =
-          visual.getBoundingClientRect();
-
-        const x =
-          event.clientX - rect.left;
-
-        const y =
-          event.clientY - rect.top;
-
-        const rotateX =
-          ((y / rect.height) - 0.5) * -3;
-
-        const rotateY =
-          ((x / rect.width) - 0.5) * 3;
-
-        visual.style.transform =
-          `perspective(1000px)
-           rotateX(${rotateX}deg)
-           rotateY(${rotateY}deg)`;
-      });
-
-      visual.addEventListener("mouseleave", () => {
-
-        visual.style.transform =
-          "perspective(1000px) rotateX(0) rotateY(0)";
-
-      });
-
-    });
   }
 
 
@@ -402,17 +286,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const skills = $$(".skill");
 
-  skills.forEach((skill) => {
+  if (window.matchMedia("(hover: hover)").matches) {
+    skills.forEach((skill) => {
+      skill.addEventListener("mouseenter", () => {
+        skill.classList.add("is-hovered");
+      });
 
-    skill.addEventListener("mouseenter", () => {
-      skill.classList.add("is-hovered");
+      skill.addEventListener("mouseleave", () => {
+        skill.classList.remove("is-hovered");
+      });
     });
-
-    skill.addEventListener("mouseleave", () => {
-      skill.classList.remove("is-hovered");
-    });
-
-  });
+  }
 
 
   /* =========================================================
@@ -424,17 +308,11 @@ document.addEventListener("DOMContentLoaded", () => {
   );
 
   externalLinks.forEach((link) => {
-
-    link.setAttribute(
-      "target",
-      "_blank"
-    );
-
+    link.setAttribute("target", "_blank");
     link.setAttribute(
       "rel",
       "noopener noreferrer"
     );
-
   });
 
 
@@ -445,11 +323,9 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener(
     "keydown",
     (event) => {
-
       if (event.key === "Escape") {
         closeMenu();
       }
-
     }
   );
 
@@ -461,12 +337,11 @@ document.addEventListener("DOMContentLoaded", () => {
   window.addEventListener(
     "resize",
     () => {
-
       if (window.innerWidth > 1000) {
         closeMenu();
       }
-
-    }
+    },
+    { passive: true }
   );
 
 
@@ -474,13 +349,12 @@ document.addEventListener("DOMContentLoaded", () => {
      CURRENT YEAR
   ========================================================= */
 
-  const yearElements = $$("[data-year]");
+  const yearElements =
+    $$("[data-year]");
 
   yearElements.forEach((element) => {
-
     element.textContent =
       new Date().getFullYear();
-
   });
 
 
@@ -491,53 +365,52 @@ document.addEventListener("DOMContentLoaded", () => {
   const images = $$("img");
 
   images.forEach((image) => {
-
     image.addEventListener("error", () => {
-
       image.style.opacity = "0";
-
     });
-
   });
 
 
   /* =========================================================
-     EXPERIENCE LAYER — ADVANCED INTERACTIONS
+     EXPERIENCE LAYER
   ========================================================= */
 
-  const root = document.documentElement;
   const hero = $(".hero");
 
-  /* Scroll progress bar */
-  const progress = document.createElement("div");
-  progress.className = "scroll-progress";
+  /* ---------------------------------------------------------
+     SCROLL PROGRESS
+  --------------------------------------------------------- */
+
+  const progress =
+    document.createElement("div");
+
+  progress.className =
+    "scroll-progress";
+
   document.body.appendChild(progress);
 
 
-  /* =========================================================
-     CINEMATIC PAGE ENTRANCE
-  ========================================================= */
+  /* ---------------------------------------------------------
+     PAGE ENTRANCE
+  --------------------------------------------------------- */
 
   window.addEventListener("load", () => {
-
     setTimeout(() => {
-
-      hero?.classList.add("page-entered");
-
+      hero?.classList.add(
+        "page-entered"
+      );
     }, 80);
-
   });
 
 
-  /* =========================================================
+  /* ---------------------------------------------------------
      SCROLL PROGRESS + VELOCITY
-  ========================================================= */
+  --------------------------------------------------------- */
 
   let scrollTick = false;
   let previousScroll = window.scrollY;
 
   const updateScrollExperience = () => {
-
     const maxScroll =
       document.documentElement.scrollHeight -
       window.innerHeight;
@@ -548,12 +421,18 @@ document.addEventListener("DOMContentLoaded", () => {
         : 0;
 
     progress.style.transform =
-      `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+      `scaleX(${Math.min(
+        1,
+        Math.max(0, ratio)
+      )})`;
 
     const velocity =
       Math.min(
         2,
-        Math.abs(window.scrollY - previousScroll)
+        Math.abs(
+          window.scrollY -
+          previousScroll
+        )
       );
 
     document.body.style.setProperty(
@@ -561,274 +440,27 @@ document.addEventListener("DOMContentLoaded", () => {
       velocity.toFixed(2)
     );
 
-    previousScroll = window.scrollY;
+    previousScroll =
+      window.scrollY;
 
     scrollTick = false;
   };
 
-
   window.addEventListener(
     "scroll",
     () => {
+      if (scrollTick) return;
 
-      if (!scrollTick) {
+      scrollTick = true;
 
-        requestAnimationFrame(
-          updateScrollExperience
-        );
-
-        scrollTick = true;
-      }
-
+      requestAnimationFrame(
+        updateScrollExperience
+      );
     },
     { passive: true }
   );
 
-
   updateScrollExperience();
-
-
-  /* =========================================================
-     MOUSE-DRIVEN ATMOSPHERE
-  ========================================================= */
-
-  if (finePointer && !reducedMotion) {
-
-    document.addEventListener(
-      "mousemove",
-      (event) => {
-
-        const x =
-          (event.clientX / window.innerWidth - 0.5) * 2;
-
-        const y =
-          (event.clientY / window.innerHeight - 0.5) * 2;
-
-        root.style.setProperty(
-          "--mouse-x",
-          x.toFixed(3)
-        );
-
-        root.style.setProperty(
-          "--mouse-y",
-          y.toFixed(3)
-        );
-
-        if (hero) {
-
-          hero.style.setProperty(
-            "--hero-mx",
-            `${x * 12}px`
-          );
-
-          hero.style.setProperty(
-            "--hero-my",
-            `${y * 12}px`
-          );
-
-        }
-
-      },
-      { passive: true }
-    );
-  }
-
-
-  /* =========================================================
-     MAGNETIC BUTTONS
-  ========================================================= */
-
-  const magneticElements = $$(
-    ".button, .header-social, .footer-logo, .contact-links a, .project-link"
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    magneticElements.forEach((element) => {
-
-      element.classList.add("magnetic");
-
-      element.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            element.getBoundingClientRect();
-
-          const x =
-            event.clientX -
-            rect.left -
-            rect.width / 2;
-
-          const y =
-            event.clientY -
-            rect.top -
-            rect.height / 2;
-
-          const strength =
-            element.classList.contains("button")
-              ? 0.14
-              : 0.08;
-
-          element.style.transform =
-            `translate(
-              ${x * strength}px,
-              ${y * strength}px
-            )`;
-        }
-      );
-
-      element.addEventListener(
-        "mouseleave",
-        () => {
-
-          element.style.transform = "";
-
-        }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     3D CARDS
-  ========================================================= */
-
-  const tiltCards = $$(
-    '[data-tilt], .achievement, .certificate'
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    tiltCards.forEach((card) => {
-
-      card.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            card.getBoundingClientRect();
-
-          const px =
-            (event.clientX - rect.left) /
-            rect.width;
-
-          const py =
-            (event.clientY - rect.top) /
-            rect.height;
-
-          const rotateY =
-            (px - 0.5) * 5;
-
-          const rotateX =
-            (py - 0.5) * -5;
-
-          card.style.setProperty(
-            "--tilt-x",
-            `${rotateX}deg`
-          );
-
-          card.style.setProperty(
-            "--tilt-y",
-            `${rotateY}deg`
-          );
-
-          card.style.transform =
-            `perspective(1100px)
-             rotateX(${rotateX}deg)
-             rotateY(${rotateY}deg)
-             translateY(-6px)`;
-
-        }
-      );
-
-      card.addEventListener(
-        "mouseleave",
-        () => {
-
-          card.style.transform = "";
-
-        }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     SPOTLIGHT EFFECT
-  ========================================================= */
-
-  const spotlightCards = $$(
-    ".skill, .journey-card, .achievement, .certificate, .venture-card"
-  );
-
-  if (finePointer && !reducedMotion) {
-
-    spotlightCards.forEach((card) => {
-
-      card.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            card.getBoundingClientRect();
-
-          card.style.setProperty(
-            "--spot-x",
-            `${event.clientX - rect.left}px`
-          );
-
-          card.style.setProperty(
-            "--spot-y",
-            `${event.clientY - rect.top}px`
-          );
-
-        },
-        { passive: true }
-      );
-
-    });
-
-  }
-
-
-  /* =========================================================
-     SPOTLIGHT ACTIVE STATE
-  ========================================================= */
-
-  if (finePointer && !reducedMotion) {
-
-    spotlightCards.forEach((card) => {
-
-      card.addEventListener(
-        "mouseenter",
-        () => {
-
-          card.classList.add(
-            "spotlight-active"
-          );
-
-        }
-      );
-
-      card.addEventListener(
-        "mouseleave",
-        () => {
-
-          card.classList.remove(
-            "spotlight-active"
-          );
-
-        }
-      );
-
-    });
-
-  }
 
 
   /* =========================================================
@@ -844,42 +476,37 @@ document.addEventListener("DOMContentLoaded", () => {
     "certifications",
     "contact"
   ]
-    .map((id) => document.getElementById(id))
+    .map((id) =>
+      document.getElementById(id)
+    )
     .filter(Boolean);
-
 
   const navLinks = $$(
     'nav a[href^="#"], .mobile-navigation a[href^="#"]'
   );
 
-
   if (
     "IntersectionObserver" in window &&
     navTargets.length
   ) {
-
     const navObserver =
       new IntersectionObserver(
         (entries) => {
-
           entries.forEach((entry) => {
-
             if (!entry.isIntersecting) return;
 
             const id =
               `#${entry.target.id}`;
 
             navLinks.forEach((link) => {
-
               link.classList.toggle(
                 "current",
-                link.getAttribute("href") === id
+                link.getAttribute(
+                  "href"
+                ) === id
               );
-
             });
-
           });
-
         },
         {
           rootMargin:
@@ -888,13 +515,9 @@ document.addEventListener("DOMContentLoaded", () => {
         }
       );
 
-
     navTargets.forEach((section) => {
-
       navObserver.observe(section);
-
     });
-
   }
 
 
@@ -905,17 +528,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const marqueeTrack =
     $(".marquee-track");
 
-  let marqueeOffset = 0;
-  let marqueeLast = performance.now();
-
-
   if (
     marqueeTrack &&
     !reducedMotion
   ) {
+    let marqueeOffset = 0;
+    let marqueeLast =
+      performance.now();
 
     const animateMarquee = (now) => {
-
       const dt =
         Math.min(
           40,
@@ -923,7 +544,6 @@ document.addEventListener("DOMContentLoaded", () => {
         );
 
       marqueeLast = now;
-
 
       const velocity =
         Number(
@@ -933,7 +553,6 @@ document.addEventListener("DOMContentLoaded", () => {
             )
         ) || 0;
 
-
       marqueeOffset -=
         dt *
         (
@@ -941,16 +560,12 @@ document.addEventListener("DOMContentLoaded", () => {
           velocity * 0.003
         );
 
-
       if (
         Math.abs(marqueeOffset) >
         marqueeTrack.scrollWidth / 2
       ) {
-
         marqueeOffset = 0;
-
       }
-
 
       marqueeTrack.style.transform =
         `translate3d(
@@ -959,18 +574,14 @@ document.addEventListener("DOMContentLoaded", () => {
           0
         )`;
 
-
       requestAnimationFrame(
         animateMarquee
       );
-
     };
-
 
     requestAnimationFrame(
       animateMarquee
     );
-
   }
 
 
@@ -981,166 +592,242 @@ document.addEventListener("DOMContentLoaded", () => {
   document.documentElement.classList.add(
     "js-ready"
   );
-
 });
+
+
 /* =========================================================
-   MOBILE SCROLL EXPERIENCE — TOUCH DEVICES
+   MOBILE SCROLL EXPERIENCE
    ========================================================= */
 
 const mobileExperience =
-  window.matchMedia("(max-width: 700px)").matches &&
-  !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.matchMedia(
+    "(max-width: 700px)"
+  ).matches &&
+  !window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
 
 if (mobileExperience) {
 
+  /* =======================================================
+     MOBILE REVEAL TARGETS
+  ======================================================= */
+
   const mobileRevealTargets = $$(
-    ".reveal, .venture-card, .journey-card, .achievement, .certificate, .skill, .project, .project-visual, .section-introduction, .intro-heading, .intro-copy, .skills-heading, .profile-layout, .contact-inner"
+    ".reveal, " +
+    ".venture-card, " +
+    ".journey-card, " +
+    ".achievement, " +
+    ".certificate, " +
+    ".skill, " +
+    ".project, " +
+    ".project-visual, " +
+    ".section-introduction, " +
+    ".intro-heading, " +
+    ".intro-copy, " +
+    ".skills-heading, " +
+    ".profile-layout, " +
+    ".contact-inner"
   );
 
-  /*
-     Mark elements for mobile animation
-  */
-  mobileRevealTargets.forEach((element, index) => {
-    if (!element.classList.contains("mobile-motion")) {
-      element.classList.add("mobile-motion");
+
+  mobileRevealTargets.forEach(
+    (element, index) => {
+
+      element.classList.add(
+        "mobile-motion"
+      );
+
+      element.style.setProperty(
+        "--mobile-delay",
+        `${Math.min(
+          index * 45,
+          300
+        )}ms`
+      );
+
     }
-
-    element.style.setProperty(
-      "--mobile-delay",
-      `${Math.min(index * 45, 300)}ms`
-    );
-  });
+  );
 
 
-  /*
+  /* =======================================================
      MOBILE INTERSECTION OBSERVER
+  ======================================================= */
 
-     More aggressive than the normal reveal observer.
-     Elements animate as soon as they meaningfully
-     enter the viewport.
-  */
+  const mobileObserver =
+    new IntersectionObserver(
+      (entries) => {
 
-  const mobileObserver = new IntersectionObserver(
-    (entries) => {
+        entries.forEach((entry) => {
 
-      entries.forEach((entry) => {
+          if (!entry.isIntersecting) {
+            return;
+          }
 
-        if (!entry.isIntersecting) return;
+          entry.target.classList.add(
+            "mobile-visible"
+          );
 
-        entry.target.classList.add("mobile-visible");
+          mobileObserver.unobserve(
+            entry.target
+          );
 
-      });
+        });
 
-    },
-    {
-      threshold: 0.08,
-      rootMargin: "0px 0px -8% 0px"
+      },
+      {
+        threshold: 0.08,
+        rootMargin:
+          "0px 0px -8% 0px"
+      }
+    );
+
+
+  mobileRevealTargets.forEach(
+    (element) => {
+      mobileObserver.observe(element);
     }
   );
 
 
-  mobileRevealTargets.forEach((element) => {
-    mobileObserver.observe(element);
-  });
-
-
-  /*
+  /* =======================================================
      MOBILE SCROLL PARALLAX
-
-     This gives the phone version movement while
-     scrolling instead of depending on mouse events.
-  */
+  ======================================================= */
 
   const mobileParallaxTargets = $$(
-    ".hero-glow-one, .hero-glow-two, .hero-grid, .portrait-frame img, .venture-visual, .sukoon-visual"
+    ".hero-glow-one, " +
+    ".hero-glow-two, " +
+    ".hero-grid, " +
+    ".portrait-frame img, " +
+    ".venture-visual, " +
+    ".sukoon-visual"
   );
 
-  let mobileParallaxTicking = false;
+
+  let mobileParallaxTicking =
+    false;
+
 
   const updateMobileParallax = () => {
 
-    mobileParallaxTargets.forEach((element) => {
+    mobileParallaxTargets.forEach(
+      (element) => {
 
-      const rect = element.getBoundingClientRect();
+        const rect =
+          element.getBoundingClientRect();
 
-      const viewportCenter =
-        window.innerHeight / 2;
+        const viewportCenter =
+          window.innerHeight / 2;
 
-      const elementCenter =
-        rect.top + rect.height / 2;
+        const elementCenter =
+          rect.top +
+          rect.height / 2;
 
-      const distance =
-        elementCenter - viewportCenter;
+        const distance =
+          elementCenter -
+          viewportCenter;
 
-      const normalized =
-        Math.max(
-          -1,
-          Math.min(
-            1,
-            distance / window.innerHeight
-          )
-        );
+        const normalized =
+          Math.max(
+            -1,
+            Math.min(
+              1,
+              distance /
+                window.innerHeight
+            )
+          );
 
-
-      if (element.classList.contains("hero-glow-one")) {
-
-        element.style.transform =
-          `translate3d(0, ${normalized * -28}px, 0)`;
-
-      }
-
-
-      else if (
-        element.classList.contains("hero-glow-two")
-      ) {
-
-        element.style.transform =
-          `translate3d(0, ${normalized * 22}px, 0)`;
-
-      }
-
-
-      else if (
-        element.classList.contains("hero-grid")
-      ) {
-
-        element.style.transform =
-          `translate3d(0, ${normalized * 12}px, 0)`;
-
-      }
-
-
-      else if (
-        element.classList.contains("portrait-frame")
-          ||
-        element.tagName === "IMG"
-      ) {
 
         if (
-          element.closest(".portrait-frame")
+          element.classList.contains(
+            "hero-glow-one"
+          )
         ) {
 
           element.style.transform =
-            `scale(1.06) translate3d(0, ${normalized * -18}px, 0)`;
+            `translate3d(
+              0,
+              ${normalized * -28}px,
+              0
+            )`;
+
+        }
+
+
+        else if (
+          element.classList.contains(
+            "hero-glow-two"
+          )
+        ) {
+
+          element.style.transform =
+            `translate3d(
+              0,
+              ${normalized * 22}px,
+              0
+            )`;
+
+        }
+
+
+        else if (
+          element.classList.contains(
+            "hero-grid"
+          )
+        ) {
+
+          element.style.transform =
+            `translate3d(
+              0,
+              ${normalized * 12}px,
+              0
+            )`;
+
+        }
+
+
+        else if (
+          element.tagName === "IMG" &&
+          element.closest(
+            ".portrait-frame"
+          )
+        ) {
+
+          element.style.transform =
+            `scale(1.06)
+             translate3d(
+               0,
+               ${normalized * -18}px,
+               0
+             )`;
+
+        }
+
+
+        else if (
+          element.classList.contains(
+            "venture-visual"
+          ) ||
+          element.classList.contains(
+            "sukoon-visual"
+          )
+        ) {
+
+          element.style.transform =
+            `translate3d(
+              0,
+              ${normalized * -12}px,
+              0
+            )`;
 
         }
 
       }
+    );
 
-
-      else if (
-        element.classList.contains("venture-visual") ||
-        element.classList.contains("sukoon-visual")
-      ) {
-
-        element.style.transform =
-          `translate3d(0, ${normalized * -12}px, 0)`;
-
-      }
-
-    });
-
-    mobileParallaxTicking = false;
+    mobileParallaxTicking =
+      false;
   };
 
 
@@ -1148,9 +835,14 @@ if (mobileExperience) {
     "scroll",
     () => {
 
-      if (mobileParallaxTicking) return;
+      if (
+        mobileParallaxTicking
+      ) {
+        return;
+      }
 
-      mobileParallaxTicking = true;
+      mobileParallaxTicking =
+        true;
 
       requestAnimationFrame(
         updateMobileParallax
@@ -1166,17 +858,16 @@ if (mobileExperience) {
   updateMobileParallax();
 
 
-  /*
-     SCROLL VELOCITY CLASS
-
-     Adds a little extra movement when the user
-     scrolls faster.
-  */
+  /* =======================================================
+     MOBILE SCROLL VELOCITY
+  ======================================================= */
 
   let mobileLastScroll =
     window.scrollY;
 
-  let mobileVelocityTicking = false;
+  let mobileVelocityTicking =
+    false;
+
 
   const updateMobileVelocity = () => {
 
@@ -1191,13 +882,17 @@ if (mobileExperience) {
 
     document.body.style.setProperty(
       "--mobile-scroll-speed",
-      Math.min(velocity, 30).toFixed(2)
+      Math.min(
+        velocity,
+        30
+      ).toFixed(2)
     );
 
     mobileLastScroll =
       currentScroll;
 
-    mobileVelocityTicking = false;
+    mobileVelocityTicking =
+      false;
   };
 
 
@@ -1205,9 +900,14 @@ if (mobileExperience) {
     "scroll",
     () => {
 
-      if (mobileVelocityTicking) return;
+      if (
+        mobileVelocityTicking
+      ) {
+        return;
+      }
 
-      mobileVelocityTicking = true;
+      mobileVelocityTicking =
+        true;
 
       requestAnimationFrame(
         updateMobileVelocity
@@ -1220,15 +920,18 @@ if (mobileExperience) {
   );
 
 
-  /*
+  /* =======================================================
      TOUCH FEEDBACK
-
-     Cards slightly react when touched.
-  */
+  ======================================================= */
 
   const touchCards = $$(
-    ".venture-card, .journey-card, .achievement, .certificate, .skill"
+    ".venture-card, " +
+    ".journey-card, " +
+    ".achievement, " +
+    ".certificate, " +
+    ".skill"
   );
+
 
   touchCards.forEach((card) => {
 
@@ -1268,15 +971,13 @@ if (mobileExperience) {
   });
 
 
-  /*
+  /* =======================================================
      MOBILE MARQUEE
-
-     Keeps the marquee moving even when
-     desktop mouse/hover interactions are absent.
-  */
+  ======================================================= */
 
   const mobileMarquee =
     $(".marquee-track");
+
 
   if (mobileMarquee) {
 
@@ -1285,40 +986,47 @@ if (mobileExperience) {
     let lastTime =
       performance.now();
 
-    const animateMobileMarquee = (
-      currentTime
-    ) => {
 
-      const delta =
-        Math.min(
-          40,
-          currentTime - lastTime
+    const animateMobileMarquee =
+      (currentTime) => {
+
+        const delta =
+          Math.min(
+            40,
+            currentTime -
+              lastTime
+          );
+
+        lastTime =
+          currentTime;
+
+        offset -=
+          delta * 0.018;
+
+        const halfWidth =
+          mobileMarquee.scrollWidth /
+          2;
+
+        if (
+          Math.abs(offset) >=
+          halfWidth
+        ) {
+          offset = 0;
+        }
+
+        mobileMarquee.style.transform =
+          `translate3d(
+            ${offset}px,
+            0,
+            0
+          )`;
+
+        requestAnimationFrame(
+          animateMobileMarquee
         );
 
-      lastTime =
-        currentTime;
+      };
 
-      offset -=
-        delta * 0.018;
-
-      const halfWidth =
-        mobileMarquee.scrollWidth / 2;
-
-      if (
-        Math.abs(offset) >=
-        halfWidth
-      ) {
-        offset = 0;
-      }
-
-      mobileMarquee.style.transform =
-        `translate3d(${offset}px, 0, 0)`;
-
-      requestAnimationFrame(
-        animateMobileMarquee
-      );
-
-    };
 
     requestAnimationFrame(
       animateMobileMarquee
@@ -1327,14 +1035,12 @@ if (mobileExperience) {
   }
 
 
-  /*
-     INITIAL UPDATE
-  */
+  /* =======================================================
+     INITIAL MOBILE UPDATE
+  ======================================================= */
 
   requestAnimationFrame(() => {
-
     updateMobileParallax();
-
   });
 
 }
