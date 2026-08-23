@@ -168,6 +168,186 @@
   }
 </style>
 
+
+<style id="portfolio-icon-and-collage-updates">
+  .social-icon{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    width:1.45rem;
+    height:1.45rem;
+    text-decoration:none;
+    color:currentColor;
+    flex:0 0 auto;
+  }
+  .social-icon svg{width:100%;height:100%;display:block;}
+  .social-icon-linkedin svg rect{fill:currentColor;}
+  .social-icon-linkedin svg path{fill:#fff;}
+  .social-icon-label{
+    position:absolute;
+    width:1px;height:1px;padding:0;margin:-1px;
+    overflow:hidden;clip:rect(0,0,0,0);
+    white-space:nowrap;border:0;
+  }
+
+  /* Compact AIC visual/content split */
+  .aic-feature{
+    margin-top:clamp(3rem,6vw,6rem);
+    padding-top:clamp(2.5rem,5vw,5rem);
+    border-top:1px solid rgba(0,0,0,.14);
+  }
+  .aic-feature-head{
+    display:grid;
+    grid-template-columns:minmax(0,.9fr) minmax(280px,1.1fr);
+    gap:clamp(2rem,6vw,7rem);
+    align-items:end;
+    margin-bottom:2rem;
+  }
+  .aic-feature-head h3{
+    margin:.45rem 0 0;
+    font:700 clamp(2rem,4vw,4rem)/1 Manrope,sans-serif;
+    letter-spacing:-.05em;
+  }
+  .aic-feature-note{
+    max-width:40rem;
+    font-size:.95rem;
+    line-height:1.7;
+    opacity:.72;
+    margin:0;
+  }
+  .aic-media-content{
+    display:grid;
+    grid-template-columns:minmax(0,1.15fr) minmax(260px,.85fr);
+    gap:clamp(1.5rem,4vw,4rem);
+    align-items:center;
+  }
+  .aic-collage{
+    position:relative;
+    min-height:460px;
+    max-width:760px;
+  }
+  .aic-photo{
+    position:absolute;
+    overflow:hidden;
+    background:#ddd;
+    margin:0;
+    box-shadow:0 18px 50px rgba(0,0,0,.10);
+    border:8px solid #f4f1eb;
+  }
+  .aic-photo img{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    transition:transform .8s cubic-bezier(.2,.7,.2,1);
+  }
+  .aic-photo:hover img{transform:scale(1.05);}
+  .aic-photo.one{
+    width:62%;
+    height:78%;
+    left:2%;
+    top:8%;
+    transform:rotate(-3deg);
+    z-index:2;
+  }
+  .aic-photo.two{
+    width:48%;
+    height:56%;
+    right:1%;
+    top:1%;
+    transform:rotate(4deg);
+    z-index:3;
+  }
+  .aic-photo.three{
+    width:48%;
+    height:57%;
+    right:8%;
+    bottom:0;
+    transform:rotate(-2deg);
+    z-index:4;
+  }
+  .aic-photo-label{
+    position:absolute;
+    left:.75rem;
+    bottom:.75rem;
+    padding:.45rem .6rem;
+    background:rgba(0,0,0,.72);
+    color:#fff;
+    font-size:.6rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    backdrop-filter:blur(8px);
+  }
+  .aic-content{
+    padding:clamp(1.5rem,3vw,3rem) 0;
+  }
+  .aic-content .small-label{display:block;margin-bottom:1rem;}
+  .aic-content h4{
+    margin:0 0 1rem;
+    font:700 clamp(1.8rem,3vw,3rem)/1.05 Manrope,sans-serif;
+    letter-spacing:-.045em;
+  }
+  .aic-content p{
+    margin:0 0 1.4rem;
+    line-height:1.8;
+    opacity:.76;
+  }
+  .aic-content-meta{
+    display:flex;
+    gap:1.5rem;
+    flex-wrap:wrap;
+    margin-top:1.5rem;
+  }
+  .aic-content-meta span{
+    font-size:.67rem;
+    letter-spacing:.13em;
+    text-transform:uppercase;
+    opacity:.55;
+  }
+  .aic-linkedin{
+    display:inline-flex;
+    align-items:center;
+    gap:.65rem;
+    margin-top:1rem;
+    color:inherit;
+    text-decoration:none;
+    font-size:.72rem;
+    letter-spacing:.1em;
+    text-transform:uppercase;
+    font-weight:700;
+  }
+  .aic-linkedin .social-icon{width:1.25rem;height:1.25rem;}
+
+  .certifications-more a{
+    display:inline-flex;
+    align-items:center;
+    gap:.6rem;
+  }
+  .certifications-more .social-icon{width:1.3rem;height:1.3rem;}
+
+  .header-social{
+    display:inline-flex !important;
+    align-items:center;
+    justify-content:center;
+  }
+  .footer-bottom > a{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+  }
+
+  @media (max-width:900px){
+    .aic-feature-head,.aic-media-content{grid-template-columns:1fr;}
+    .aic-collage{min-height:430px;}
+  }
+  @media (max-width:600px){
+    .aic-collage{min-height:360px;}
+    .aic-photo.one{width:65%;height:76%;}
+    .aic-photo.two{width:52%;height:53%;}
+    .aic-photo.three{width:52%;height:54%;right:4%;}
+  }
+</style>
+
 </head>
 
 <body>
@@ -247,13 +427,14 @@
 
     </nav>
 
-    <a
-      href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-      target="_blank"
-      rel="noopener noreferrer"
-      class="header-social"
-    >
-      LinkedIn ↗
+    <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" class="header-social" aria-label="LinkedIn">
+      <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+      <span class="social-icon-label">LinkedIn</span>
     </a>
 
     <button
@@ -310,13 +491,15 @@
         07 — Contact
       </a>
 
-      <a
-        href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn ↗
-      </a>
+      <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+      <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+      <span class="social-icon-label">LinkedIn</span>
+    </a>
 
     </div>
 
@@ -638,7 +821,7 @@
               A performance marketing venture focused on Meta Ads, lead generation
               and customer acquisition systems for local businesses.
             </p>
-            <span class="project-link project-link-disabled">Past venture <span>→</span></span>
+            <span class="project-link project-link-disabled">Past Venture</span></span>
           </div>
         </article>
 
@@ -659,30 +842,10 @@
               A nature-inspired venture exploring products, wellbeing and
               everyday moments of calm.
             </p>
-            <span class="project-link project-link-disabled">Coming soon <span>→</span></span>
+            <span class="project-link project-link-disabled">Coming Soon</span></span>
           </div>
         </article>
-
-        <article class="venture-card venture-next reveal" data-tilt>
-          <div class="venture-number">04</div>
-          <div class="venture-visual">
-            <span class="venture-overline">IDEAS / EXPERIMENTS / IMPACT</span>
-            <div class="next-orbit"><span>✦</span></div>
-          </div>
-          <div class="venture-info">
-            <div>
-              <span class="project-type">IN THE WORKS</span>
-              <h3>WHAT'S NEXT</h3>
-            </div>
-            <p>
-              Exploring new ideas and future ventures that turn curiosity
-              into something tangible, useful and worth remembering.
-            </p>
-            <span class="project-link project-link-disabled">In the works <span>→</span></span>
-          </div>
-        </article>
-
-      </div>
+</div>
     </section>
 
 
@@ -773,35 +936,57 @@
             <h3>AIC-SMUTBI</h3>
           </div>
           <p class="aic-feature-note">
-            A visual snapshot from my experience at AIC-SMUTBI, Sikkim Manipal University.
-            More of the journey and professional activity can be explored on LinkedIn.
+            A selected visual from my experience at AIC-SMUTBI,
+            Sikkim Manipal University.
           </p>
         </div>
 
-        <div class="aic-gallery">
-          <figure class="aic-photo">
-            <img src="aic-smutbi-01.png" alt="Bivek at AIC-SMUTBI, Sikkim Manipal University" loading="lazy">
-            <span class="aic-photo-label">AIC-SMUTBI · 01</span>
-          </figure>
+        <div class="aic-media-content">
+          <div class="aic-collage">
+            <figure class="aic-photo one">
+              <img src="aic-smutbi-01.png" alt="Bivek at AIC-SMUTBI, Sikkim Manipal University" loading="lazy">
+              <span class="aic-photo-label">AIC-SMUTBI · 01</span>
+            </figure>
 
-          <figure class="aic-photo">
-            <img src="aic-smutbi-02.png" alt="AIC-SMUTBI interior at Sikkim Manipal University" loading="lazy">
-            <span class="aic-photo-label">AIC-SMUTBI · 02</span>
-          </figure>
+            <figure class="aic-photo two">
+              <img src="aic-smutbi-02.png" alt="AIC-SMUTBI at Sikkim Manipal University" loading="lazy">
+              <span class="aic-photo-label">AIC-SMUTBI · 02</span>
+            </figure>
 
-          <figure class="aic-photo">
-            <img src="aic-smutbi-03.png" alt="Bivek during an AIC-SMUTBI experience" loading="lazy">
-            <span class="aic-photo-label">AIC-SMUTBI · 03</span>
-          </figure>
-        </div>
+            <figure class="aic-photo three">
+              <img src="aic-smutbi-03.png" alt="Bivek during an AIC-SMUTBI experience" loading="lazy">
+              <span class="aic-photo-label">AIC-SMUTBI · 03</span>
+            </figure>
+          </div>
 
-        <div class="aic-feature-copy">
-          <p>
-            Exposure to an active startup environment, people and entrepreneurial
-            experiences — presented here as a selected visual moment rather than
-            an exhaustive list of activities.
-          </p>
-          <span class="aic-tag">SELECTED MOMENT / NOT THE FULL STORY</span>
+          <div class="aic-content">
+            <span class="small-label">SELECTED EXPERIENCE</span>
+            <h4>Inside the startup ecosystem.</h4>
+            <p>
+              Exposure to an active startup environment, entrepreneurial
+              conversations and real-world experiences. These three images
+              are only a selected glimpse — not the full story.
+            </p>
+
+            <div class="aic-content-meta">
+              <span>SMU · SIKKIM</span>
+              <span>STARTUP ECOSYSTEM</span>
+            </div>
+
+            <a class="aic-linkedin"
+               href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
+               target="_blank"
+               rel="noopener noreferrer"
+               aria-label="See more on LinkedIn">
+              <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+              <span class="social-icon-label">See more on LinkedIn</span>
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -842,10 +1027,16 @@
       </div>
 
       <div class="certifications-more reveal">
-        <span>20+ certifications across marketing, analytics & business.</span>
-        <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer">
-          View all on LinkedIn ↗
-        </a>
+        <span>More certifications across marketing, analytics & business.</span>
+        <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" aria-label="View all certifications on LinkedIn">
+      <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+      <span>View all</span>
+    </a>
       </div>
     </section>>
 
@@ -918,21 +1109,21 @@
           <p>
             For collaborations, opportunities,
             partnerships or interesting ideas,
-            connect with me on LinkedIn.
+            connect with me professionally.
             <br><br>
-            My LinkedIn also contains the fuller record of my
+            My professional profile also contains the fuller record of my
             certifications, experiences and professional activity.
           </p>
 
-          <a
-            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="button button-primary"
-          >
-            View LinkedIn
-            <span>↗</span>
-          </a>
+          <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" class="button button-primary" aria-label="Open LinkedIn profile">
+      <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+      <span class="social-icon-label">Open LinkedIn profile</span>
+    </a>
 
         </div>
 
@@ -974,24 +1165,31 @@
 
         <div class="contact-links">
 
-          <a
-            href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <span>LinkedIn</span>
-            <span>↗</span>
-          </a>
+          <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+        <span class="social-icon-label">LinkedIn</span>
+      </a>
 
           <a href="#work">
             <span>Explore Work</span>
             <span>↗</span>
           </a>
 
-          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer">
-            <span>Sukoon By Nature</span>
-            <span>↗</span>
-          </a>
+          <a href="https://www.instagram.com/" target="_blank" rel="noopener noreferrer" aria-label="Instagram">
+      <span class="social-icon" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="3" y="3" width="18" height="18" rx="5" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="12" cy="12" r="4.2" fill="none" stroke="currentColor" stroke-width="2"/>
+    <circle cx="17.4" cy="6.7" r="1.2" fill="currentColor"/>
+  </svg>
+</span>
+      <span class="social-icon-label">Instagram</span>
+    </a>
 
         </div>
 
@@ -1045,12 +1243,14 @@
         India
       </span>
 
-      <a
-        href="https://www.linkedin.com/in/bivek-ray-4b6547378/"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        LinkedIn ↗
+      <a href="https://www.linkedin.com/in/bivek-ray-4b6547378/" target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+        <span class="social-icon social-icon-linkedin" aria-hidden="true">
+  <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+    <rect x="1" y="1" width="22" height="22" rx="2.5"/>
+    <path d="M7 8.1H4.5V19H7V8.1ZM5.75 4.8C4.92 4.8 4.25 5.48 4.25 6.31S4.92 7.82 5.75 7.82s1.5-.68 1.5-1.51-.67-1.51-1.5-1.51ZM19.5 12.76c0-2.95-1.57-4.33-3.66-4.33-1.68 0-2.43.93-2.85 1.58v-1.9h-2.5V19H13v-5.38c0-1.42.27-2.8 2.03-2.8 1.73 0 1.75 1.63 1.75 2.9V19h2.5l.22-6.24Z"/>
+  </svg>
+</span>
+        <span class="social-icon-label">LinkedIn</span>
       </a>
 
     </div>
