@@ -1,11 +1,5 @@
-/* =========================================================
-   BIVEK RAY — PREMIUM PORTFOLIO
-   MASTER JAVASCRIPT
-========================================================= */
-
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
-
 
   /* =========================================================
      HELPERS
@@ -17,162 +11,153 @@ document.addEventListener("DOMContentLoaded", () => {
   const $$ = (selector, parent = document) =>
     [...parent.querySelectorAll(selector)];
 
+  const prefersReducedMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const finePointer = window.matchMedia(
+    "(pointer: fine)"
+  ).matches;
+
 
   /* =========================================================
      PAGE LOADER
   ========================================================= */
 
-  const loader = $(".loader");
+  const loader = $(".page-loader");
 
-  if (loader) {
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        loader.classList.add("loaded");
-      }, 500);
+  const hideLoader = () => {
+    if (!loader) return;
+
+    setTimeout(() => {
+      loader.classList.add("loaded");
+    }, 650);
+  };
+
+  if (document.readyState === "complete") {
+    hideLoader();
+  } else {
+    window.addEventListener("load", hideLoader, {
+      once: true
     });
   }
 
 
   /* =========================================================
-     CUSTOM CURSOR
+     HEADER
   ========================================================= */
 
-  const cursorDot = $(".cursor-dot");
-  const cursorCircle = $(".cursor-circle");
+  const header = $(".site-header");
 
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
+  let lastScroll = window.scrollY;
+  let ticking = false;
 
-  if (cursorDot && cursorCircle && finePointer) {
+  const updateHeader = () => {
+    if (!header) return;
 
-    let mouseX = window.innerWidth / 2;
-    let mouseY = window.innerHeight / 2;
+    const currentScroll = window.scrollY;
 
-    let circleX = mouseX;
-    let circleY = mouseY;
+    if (currentScroll > 30) {
+      header.classList.add("scrolled");
+    } else {
+      header.classList.remove("scrolled");
+    }
 
-    document.addEventListener("mousemove", (event) => {
-      mouseX = event.clientX;
-      mouseY = event.clientY;
+    if (currentScroll > 120 && currentScroll > lastScroll) {
+      header.classList.add("hidden");
+    } else {
+      header.classList.remove("hidden");
+    }
 
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
-    });
+    lastScroll = currentScroll;
+    ticking = false;
+  };
 
-    const animateCursor = () => {
-      circleX += (mouseX - circleX) * 0.13;
-      circleY += (mouseY - circleY) * 0.13;
-
-      cursorCircle.style.left = `${circleX}px`;
-      cursorCircle.style.top = `${circleY}px`;
-
-      requestAnimationFrame(animateCursor);
-    };
-
-    animateCursor();
-
-    const interactiveElements = $$(
-      "a, button, .project, .skill, .portrait-frame"
-    );
-
-    interactiveElements.forEach((element) => {
-
-      element.addEventListener("mouseenter", () => {
-        cursorCircle.classList.add("active");
-      });
-
-      element.addEventListener("mouseleave", () => {
-        cursorCircle.classList.remove("active");
-      });
-
-    });
-  }
+  window.addEventListener(
+    "scroll",
+    () => {
+      if (!ticking) {
+        window.requestAnimationFrame(updateHeader);
+        ticking = true;
+      }
+    },
+    { passive: true }
+  );
 
 
   /* =========================================================
      MOBILE MENU
   ========================================================= */
 
-  const menuToggle = $(".menu-toggle");
-  const mobileNavigation = $(".mobile-navigation");
-  const mobileLinks = $$(".mobile-navigation a");
+  const menuButton = $(".mobile-menu-button");
+  const mobileMenu = $(".mobile-menu");
+  const mobileLinks = $$(".mobile-menu a");
 
   const closeMenu = () => {
+    if (!menuButton || !mobileMenu) return;
 
-    if (!menuToggle || !mobileNavigation) return;
-
-    menuToggle.classList.remove("open");
-    mobileNavigation.classList.remove("open");
-
+    menuButton.classList.remove("open");
+    mobileMenu.classList.remove("open");
     document.body.classList.remove("menu-open");
   };
 
-  if (menuToggle && mobileNavigation) {
+  const toggleMenu = () => {
+    if (!menuButton || !mobileMenu) return;
 
-    menuToggle.addEventListener("click", () => {
+    const open = mobileMenu.classList.toggle("open");
 
-      const isOpen =
-        mobileNavigation.classList.contains("open");
+    menuButton.classList.toggle("open", open);
+    document.body.classList.toggle("menu-open", open);
+  };
 
-      if (isOpen) {
-
-        closeMenu();
-
-      } else {
-
-        menuToggle.classList.add("open");
-        mobileNavigation.classList.add("open");
-
-        document.body.classList.add("menu-open");
-
-      }
-
-    });
+  if (menuButton && mobileMenu) {
+    menuButton.addEventListener("click", toggleMenu);
 
     mobileLinks.forEach((link) => {
-
-      link.addEventListener("click", () => {
-        closeMenu();
-      });
-
+      link.addEventListener("click", closeMenu);
     });
   }
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape") {
+      closeMenu();
+    }
+  });
 
 
   /* =========================================================
-     HEADER SHOW / HIDE
+     SMOOTH ANCHOR SCROLL
   ========================================================= */
 
-  const header = $(".header");
+  $$('a[href^="#"]').forEach((link) => {
+    link.addEventListener("click", (event) => {
+      const id = link.getAttribute("href");
 
-  if (header) {
+      if (!id || id === "#") return;
 
-    let lastScroll = window.scrollY;
+      const target = document.querySelector(id);
 
-    window.addEventListener(
-      "scroll",
-      () => {
+      if (!target) return;
 
-        const currentScroll = window.scrollY;
+      event.preventDefault();
 
-        if (
-          currentScroll > 120 &&
-          currentScroll > lastScroll
-        ) {
+      const headerHeight = header
+        ? header.offsetHeight
+        : 0;
 
-          header.classList.add("hidden");
+      const targetPosition =
+        target.getBoundingClientRect().top +
+        window.scrollY -
+        headerHeight;
 
-        } else {
-
-          header.classList.remove("hidden");
-
-        }
-
-        lastScroll = currentScroll;
-
-      },
-      { passive: true }
-    );
-  }
+      window.scrollTo({
+        top: targetPosition,
+        behavior: prefersReducedMotion
+          ? "auto"
+          : "smooth"
+      });
+    });
+  });
 
 
   /* =========================================================
@@ -181,172 +166,210 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const revealElements = $$(".reveal");
 
-  if ("IntersectionObserver" in window) {
-
-    const observer = new IntersectionObserver(
-      (entries, observerInstance) => {
-
-        entries.forEach((entry) => {
-
-          if (entry.isIntersecting) {
+  if (
+    revealElements.length &&
+    "IntersectionObserver" in window &&
+    !prefersReducedMotion
+  ) {
+    const revealObserver =
+      new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
 
             entry.target.classList.add("visible");
 
-            observerInstance.unobserve(entry.target);
-
-          }
-
-        });
-
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -50px 0px"
-      }
-    );
+            observer.unobserve(entry.target);
+          });
+        },
+        {
+          threshold: 0.12,
+          rootMargin: "0px 0px -70px 0px"
+        }
+      );
 
     revealElements.forEach((element) => {
-      observer.observe(element);
+      revealObserver.observe(element);
     });
-
   } else {
-
     revealElements.forEach((element) => {
       element.classList.add("visible");
     });
-
   }
 
 
   /* =========================================================
-     STAGGERED REVEALS
+     CUSTOM CURSOR
   ========================================================= */
 
-  const staggerGroups = $$(".stagger");
+  const cursor = $(".cursor");
 
-  staggerGroups.forEach((group) => {
+  if (cursor && finePointer && !prefersReducedMotion) {
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
 
-    const children = [...group.children];
+    let cursorX = mouseX;
+    let cursorY = mouseY;
 
-    children.forEach((child, index) => {
-
-      child.style.transitionDelay =
-        `${index * 80}ms`;
-
+    document.addEventListener("mousemove", (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
     });
 
-  });
+    const renderCursor = () => {
+      cursorX +=
+        (mouseX - cursorX) * 0.18;
 
+      cursorY +=
+        (mouseY - cursorY) * 0.18;
 
-  /* =========================================================
-     SMOOTH ANCHOR SCROLL
-  ========================================================= */
+      cursor.style.left = `${cursorX}px`;
+      cursor.style.top = `${cursorY}px`;
 
-  const anchorLinks = $$('a[href^="#"]');
+      requestAnimationFrame(renderCursor);
+    };
 
-  anchorLinks.forEach((link) => {
+    renderCursor();
 
-    link.addEventListener("click", (event) => {
+    const interactive = $$(
+      "a, button, .venture-card, .skill-item, .journey-card, .achievement, .certification, .portrait-frame"
+    );
 
-      const targetId =
-        link.getAttribute("href");
-
-      if (!targetId || targetId === "#") return;
-
-      const target = $(targetId);
-
-      if (!target) return;
-
-      event.preventDefault();
-
-      target.scrollIntoView({
-        behavior: "smooth",
-        block: "start"
+    interactive.forEach((element) => {
+      element.addEventListener("mouseenter", () => {
+        cursor.classList.add("active");
       });
 
+      element.addEventListener("mouseleave", () => {
+        cursor.classList.remove("active");
+      });
     });
-
-  });
-
-
-  /* =========================================================
-     HERO IMAGE PARALLAX
-  ========================================================= */
-
-  const portrait = $(".portrait-frame img");
-
-  const reducedMotion =
-    window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    ).matches;
-
-  if (portrait && !reducedMotion) {
-
-    let ticking = false;
-
-    window.addEventListener(
-      "scroll",
-      () => {
-
-        if (ticking) return;
-
-        ticking = true;
-
-        requestAnimationFrame(() => {
-
-          const scrollY = window.scrollY;
-
-          if (scrollY < window.innerHeight) {
-
-            const movement = scrollY * 0.035;
-
-            portrait.style.transform =
-              `scale(1.04) translate3d(0, ${movement}px, 0)`;
-
-          }
-
-          ticking = false;
-
-        });
-
-      },
-      { passive: true }
-    );
   }
 
 
   /* =========================================================
-     HERO BACKGROUND PARALLAX
+     MAGNETIC BUTTONS
   ========================================================= */
 
-  const glowOne = $(".hero-glow-one");
-  const glowTwo = $(".hero-glow-two");
+  if (finePointer && !prefersReducedMotion) {
+    const magneticElements = $$(
+      ".primary-button, .header-cta, .light-button, .text-button"
+    );
+
+    magneticElements.forEach((element) => {
+      element.addEventListener("mousemove", (event) => {
+        const rect =
+          element.getBoundingClientRect();
+
+        const x =
+          event.clientX -
+          rect.left -
+          rect.width / 2;
+
+        const y =
+          event.clientY -
+          rect.top -
+          rect.height / 2;
+
+        element.style.transform =
+          `translate(${x * 0.12}px, ${y * 0.12}px)`;
+      });
+
+      element.addEventListener("mouseleave", () => {
+        element.style.transform = "";
+      });
+    });
+  }
+
+
+  /* =========================================================
+     HERO PARALLAX
+  ========================================================= */
+
+  const hero = $(".hero");
+  const portrait = $(".portrait");
+  const heroCircle = $(".hero-circle-one");
 
   if (
-    !reducedMotion &&
-    (glowOne || glowTwo)
+    hero &&
+    !prefersReducedMotion &&
+    finePointer
   ) {
+    hero.addEventListener("mousemove", (event) => {
+      const rect = hero.getBoundingClientRect();
+
+      const x =
+        (event.clientX - rect.left) /
+        rect.width -
+        0.5;
+
+      const y =
+        (event.clientY - rect.top) /
+        rect.height -
+        0.5;
+
+      if (portrait) {
+        portrait.style.transform =
+          `scale(1.05)
+           translate3d(${x * 8}px, ${y * 8}px, 0)`;
+      }
+
+      if (heroCircle) {
+        heroCircle.style.transform =
+          `translate3d(${x * -20}px, ${y * -20}px, 0)
+           rotate(-10deg)`;
+      }
+    });
+
+    hero.addEventListener("mouseleave", () => {
+      if (portrait) {
+        portrait.style.transform =
+          "scale(1.05) translate3d(0,0,0)";
+      }
+
+      if (heroCircle) {
+        heroCircle.style.transform =
+          "translate3d(0,0,0) rotate(-10deg)";
+      }
+    });
+  }
+
+
+  /* =========================================================
+     SCROLL PARALLAX
+  ========================================================= */
+
+  const orbitElements = $$(".hero-leaf, .hero-circle-two");
+
+  if (
+    orbitElements.length &&
+    !prefersReducedMotion
+  ) {
+    let parallaxTicking = false;
+
+    const updateParallax = () => {
+      const scrollY = window.scrollY;
+
+      orbitElements.forEach((element, index) => {
+        const speed =
+          index % 2 === 0
+            ? 0.035
+            : -0.025;
+
+        element.style.translate =
+          `0 ${scrollY * speed}px`;
+      });
+
+      parallaxTicking = false;
+    };
 
     window.addEventListener(
       "scroll",
       () => {
-
-        const scrollY = window.scrollY;
-
-        if (glowOne) {
-
-          glowOne.style.transform =
-            `translate3d(0, ${scrollY * 0.08}px, 0)`;
-
+        if (!parallaxTicking) {
+          requestAnimationFrame(updateParallax);
+          parallaxTicking = true;
         }
-
-        if (glowTwo) {
-
-          glowTwo.style.transform =
-            `translate3d(0, ${scrollY * -0.04}px, 0)`;
-
-        }
-
       },
       { passive: true }
     );
@@ -354,19 +377,182 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     PROJECT VISUAL TILT
+     IMAGE TILT
   ========================================================= */
 
-  const projectVisuals = $$(".project-visual");
+  if (finePointer && !prefersReducedMotion) {
+    const cards = $$(
+      ".venture-card, .journey-card, .achievement"
+    );
 
-  if (!reducedMotion && finePointer) {
-
-    projectVisuals.forEach((visual) => {
-
-      visual.addEventListener("mousemove", (event) => {
-
+    cards.forEach((card) => {
+      card.addEventListener("mousemove", (event) => {
         const rect =
-          visual.getBoundingClientRect();
+          card.getBoundingClientRect();
+
+        const x =
+          (event.clientX - rect.left) /
+          rect.width -
+          0.5;
+
+        const y =
+          (event.clientY - rect.top) /
+          rect.height -
+          0.5;
+
+        card.style.transform =
+          `perspective(900px)
+           rotateX(${y * -2.5}deg)
+           rotateY(${x * 2.5}deg)
+           translateY(-7px)`;
+      });
+
+      card.addEventListener("mouseleave", () => {
+        card.style.transform = "";
+      });
+    });
+  }
+
+
+  /* =========================================================
+     NUMBER COUNTER
+  ========================================================= */
+
+  const counters = $$("[data-count]");
+
+  if (
+    counters.length &&
+    "IntersectionObserver" in window
+  ) {
+    const counterObserver =
+      new IntersectionObserver(
+        (entries, observer) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            const element = entry.target;
+
+            const target =
+              Number(element.dataset.count);
+
+            if (!Number.isFinite(target)) {
+              observer.unobserve(element);
+              return;
+            }
+
+            const duration =
+              prefersReducedMotion
+                ? 0
+                : 1300;
+
+            const startTime =
+              performance.now();
+
+            const animate = (currentTime) => {
+              const progress =
+                duration === 0
+                  ? 1
+                  : Math.min(
+                      (currentTime -
+                        startTime) /
+                        duration,
+                      1
+                    );
+
+              const eased =
+                1 -
+                Math.pow(
+                  1 - progress,
+                  3
+                );
+
+              element.textContent =
+                Math.round(
+                  target * eased
+                );
+
+              if (progress < 1) {
+                requestAnimationFrame(
+                  animate
+                );
+              }
+            };
+
+            requestAnimationFrame(animate);
+
+            observer.unobserve(element);
+          });
+        },
+        {
+          threshold: 0.7
+        }
+      );
+
+    counters.forEach((counter) => {
+      counterObserver.observe(counter);
+    });
+  }
+
+
+  /* =========================================================
+     ACTIVE NAVIGATION
+  ========================================================= */
+
+  const sections = $$(
+    "section[id]"
+  );
+
+  const navLinks = $$(
+    '.desktop-nav a[href^="#"]'
+  );
+
+  if (
+    sections.length &&
+    navLinks.length &&
+    "IntersectionObserver" in window
+  ) {
+    const sectionObserver =
+      new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (!entry.isIntersecting) return;
+
+            const id =
+              entry.target.getAttribute("id");
+
+            navLinks.forEach((link) => {
+              const matches =
+                link.getAttribute("href") ===
+                `#${id}`;
+
+              link.classList.toggle(
+                "active",
+                matches
+              );
+            });
+          });
+        },
+        {
+          rootMargin:
+            "-35% 0px -55% 0px"
+        }
+      );
+
+    sections.forEach((section) => {
+      sectionObserver.observe(section);
+    });
+  }
+
+
+  /* =========================================================
+     HOVER IMAGE / CARD GLOW
+  ========================================================= */
+
+  if (finePointer) {
+    $$(".venture-card").forEach((card) => {
+      card.addEventListener("mousemove", (event) => {
+        const rect =
+          card.getBoundingClientRect();
 
         const x =
           event.clientX - rect.left;
@@ -374,58 +560,27 @@ document.addEventListener("DOMContentLoaded", () => {
         const y =
           event.clientY - rect.top;
 
-        const rotateX =
-          ((y / rect.height) - 0.5) * -3;
+        card.style.setProperty(
+          "--mouse-x",
+          `${x}px`
+        );
 
-        const rotateY =
-          ((x / rect.width) - 0.5) * 3;
-
-        visual.style.transform =
-          `perspective(1000px)
-           rotateX(${rotateX}deg)
-           rotateY(${rotateY}deg)`;
+        card.style.setProperty(
+          "--mouse-y",
+          `${y}px`
+        );
       });
-
-      visual.addEventListener("mouseleave", () => {
-
-        visual.style.transform =
-          "perspective(1000px) rotateX(0) rotateY(0)";
-
-      });
-
     });
   }
-
-
-  /* =========================================================
-     SKILL HOVER
-  ========================================================= */
-
-  const skills = $$(".skill");
-
-  skills.forEach((skill) => {
-
-    skill.addEventListener("mouseenter", () => {
-      skill.classList.add("is-hovered");
-    });
-
-    skill.addEventListener("mouseleave", () => {
-      skill.classList.remove("is-hovered");
-    });
-
-  });
 
 
   /* =========================================================
      EXTERNAL LINKS
   ========================================================= */
 
-  const externalLinks = $$(
+  $$(
     'a[href^="http://"], a[href^="https://"]'
-  );
-
-  externalLinks.forEach((link) => {
-
+  ).forEach((link) => {
     link.setAttribute(
       "target",
       "_blank"
@@ -435,70 +590,27 @@ document.addEventListener("DOMContentLoaded", () => {
       "rel",
       "noopener noreferrer"
     );
-
   });
-
-
-  /* =========================================================
-     ESCAPE KEY
-  ========================================================= */
-
-  document.addEventListener(
-    "keydown",
-    (event) => {
-
-      if (event.key === "Escape") {
-        closeMenu();
-      }
-
-    }
-  );
-
-
-  /* =========================================================
-     RESIZE SAFETY
-  ========================================================= */
-
-  window.addEventListener(
-    "resize",
-    () => {
-
-      if (window.innerWidth > 1000) {
-        closeMenu();
-      }
-
-    }
-  );
 
 
   /* =========================================================
      CURRENT YEAR
   ========================================================= */
 
-  const yearElements = $$("[data-year]");
-
-  yearElements.forEach((element) => {
-
+  $$("[data-year]").forEach((element) => {
     element.textContent =
       new Date().getFullYear();
-
   });
 
 
   /* =========================================================
-     IMAGE FALLBACK
+     RESIZE
   ========================================================= */
 
-  const images = $$("img");
-
-  images.forEach((image) => {
-
-    image.addEventListener("error", () => {
-
-      image.style.opacity = "0";
-
-    });
-
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 760) {
+      closeMenu();
+    }
   });
 
 
