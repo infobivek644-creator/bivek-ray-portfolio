@@ -11,18 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
   const $$ = (selector, parent = document) =>
     [...parent.querySelectorAll(selector)];
 
+  const reduceMotion = window.matchMedia(
+    "(prefers-reduced-motion: reduce)"
+  ).matches;
+
+  const finePointer = window.matchMedia(
+    "(pointer: fine)"
+  ).matches;
+
 
   /* =========================================================
-     PAGE LOADER
+     PAGE TRANSITION
   ========================================================= */
 
-  const loader = $(".loader");
+  const pageTransition = $("#pageTransition");
 
-  if (loader) {
+  if (pageTransition) {
     window.addEventListener("load", () => {
       setTimeout(() => {
-        loader.classList.add("loaded");
-      }, 500);
+        pageTransition.classList.add("loaded");
+      }, 650);
     });
   }
 
@@ -31,58 +39,49 @@ document.addEventListener("DOMContentLoaded", () => {
      CUSTOM CURSOR
   ========================================================= */
 
-  const cursorDot = $(".cursor-dot");
-  const cursorCircle = $(".cursor-circle");
+  const cursor = $("#cursor");
 
-  const finePointer = window.matchMedia("(pointer: fine)").matches;
-  const reducedMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
+  if (cursor && finePointer && !reduceMotion) {
 
-  if (
-    cursorDot &&
-    cursorCircle &&
-    finePointer &&
-    !reducedMotion
-  ) {
     let mouseX = window.innerWidth / 2;
     let mouseY = window.innerHeight / 2;
 
-    let circleX = mouseX;
-    let circleY = mouseY;
+    let currentX = mouseX;
+    let currentY = mouseY;
 
     document.addEventListener("mousemove", (event) => {
       mouseX = event.clientX;
       mouseY = event.clientY;
-
-      cursorDot.style.left = `${mouseX}px`;
-      cursorDot.style.top = `${mouseY}px`;
     });
 
-    const animateCursor = () => {
-      circleX += (mouseX - circleX) * 0.13;
-      circleY += (mouseY - circleY) * 0.13;
+    const moveCursor = () => {
 
-      cursorCircle.style.left = `${circleX}px`;
-      cursorCircle.style.top = `${circleY}px`;
+      currentX += (mouseX - currentX) * 0.14;
+      currentY += (mouseY - currentY) * 0.14;
 
-      requestAnimationFrame(animateCursor);
+      cursor.style.left = `${currentX}px`;
+      cursor.style.top = `${currentY}px`;
+
+      requestAnimationFrame(moveCursor);
     };
 
-    animateCursor();
+    moveCursor();
 
-    const cursorTargets = $$(
-      "a, button, .project, .hero-image-frame, .circle-link"
+
+    const interactiveElements = $$(
+      "a, button, .work-item, .hero-portrait, .portrait-frame"
     );
 
-    cursorTargets.forEach((element) => {
+    interactiveElements.forEach((element) => {
+
       element.addEventListener("mouseenter", () => {
-        cursorCircle.classList.add("active");
+        cursor.classList.add("active");
       });
 
       element.addEventListener("mouseleave", () => {
-        cursorCircle.classList.remove("active");
+        cursor.classList.remove("active");
       });
+
     });
   }
 
@@ -91,43 +90,62 @@ document.addEventListener("DOMContentLoaded", () => {
      MOBILE MENU
   ========================================================= */
 
-  const menuToggle = $(".menu-toggle");
-  const mobileMenu = $(".mobile-menu");
-  const mobileLinks = $$(".mobile-link");
+  const mobileTrigger = $("#mobileTrigger");
+  const mobileNavigation = $("#mobileNavigation");
+
+  const mobileLinks = $$(
+    ".mobile-navigation nav a"
+  );
+
 
   const closeMenu = () => {
-    if (!menuToggle || !mobileMenu) return;
 
-    menuToggle.classList.remove("active");
-    mobileMenu.classList.remove("active");
+    if (!mobileTrigger || !mobileNavigation) {
+      return;
+    }
+
+    mobileTrigger.classList.remove("active");
+    mobileNavigation.classList.remove("active");
 
     document.body.classList.remove("menu-open");
   };
 
-  const openMenu = () => {
-    if (!menuToggle || !mobileMenu) return;
 
-    menuToggle.classList.add("active");
-    mobileMenu.classList.add("active");
+  const openMenu = () => {
+
+    if (!mobileTrigger || !mobileNavigation) {
+      return;
+    }
+
+    mobileTrigger.classList.add("active");
+    mobileNavigation.classList.add("active");
 
     document.body.classList.add("menu-open");
   };
 
-  if (menuToggle && mobileMenu) {
-    menuToggle.addEventListener("click", () => {
-      const isOpen = mobileMenu.classList.contains("active");
+
+  if (mobileTrigger && mobileNavigation) {
+
+    mobileTrigger.addEventListener("click", () => {
+
+      const isOpen =
+        mobileNavigation.classList.contains("active");
 
       if (isOpen) {
         closeMenu();
       } else {
         openMenu();
       }
+
     });
 
+
     mobileLinks.forEach((link) => {
+
       link.addEventListener("click", () => {
         closeMenu();
       });
+
     });
   }
 
@@ -137,9 +155,11 @@ document.addEventListener("DOMContentLoaded", () => {
   ========================================================= */
 
   document.addEventListener("keydown", (event) => {
+
     if (event.key === "Escape") {
       closeMenu();
     }
+
   });
 
 
@@ -147,36 +167,55 @@ document.addEventListener("DOMContentLoaded", () => {
      HEADER HIDE / SHOW
   ========================================================= */
 
-  const nav = $(".nav");
+  const header = $("#header");
 
-  if (nav) {
-    let lastScrollY = window.scrollY;
+  if (header) {
+
+    let previousScroll = window.scrollY;
     let ticking = false;
 
-    const updateHeader = () => {
-      const currentScrollY = window.scrollY;
 
-      if (currentScrollY <= 80) {
-        nav.classList.remove("hidden");
-      } else if (currentScrollY > lastScrollY) {
-        nav.classList.add("hidden");
+    const updateHeader = () => {
+
+      const currentScroll = window.scrollY;
+
+
+      if (currentScroll < 80) {
+
+        header.classList.remove("hidden");
+
+      } else if (currentScroll > previousScroll) {
+
+        header.classList.add("hidden");
+
       } else {
-        nav.classList.remove("hidden");
+
+        header.classList.remove("hidden");
+
       }
 
-      lastScrollY = currentScrollY;
+
+      previousScroll = currentScroll;
+
       ticking = false;
     };
+
 
     window.addEventListener(
       "scroll",
       () => {
+
         if (!ticking) {
+
           requestAnimationFrame(updateHeader);
+
           ticking = true;
         }
+
       },
-      { passive: true }
+      {
+        passive: true
+      }
     );
   }
 
@@ -187,58 +226,110 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const revealElements = $$(".reveal");
 
-  if ("IntersectionObserver" in window && !reducedMotion) {
-    const revealObserver = new IntersectionObserver(
-      (entries, observer) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
 
-          entry.target.classList.add("visible");
+  if (
+    "IntersectionObserver" in window &&
+    !reduceMotion
+  ) {
 
-          observer.unobserve(entry.target);
-        });
-      },
-      {
-        threshold: 0.12,
-        rootMargin: "0px 0px -70px 0px"
-      }
-    );
+    const revealObserver =
+      new IntersectionObserver(
+        (entries, observer) => {
+
+          entries.forEach((entry) => {
+
+            if (!entry.isIntersecting) {
+              return;
+            }
+
+
+            entry.target.classList.add("visible");
+
+            observer.unobserve(entry.target);
+
+          });
+
+        },
+        {
+          threshold: 0.12,
+
+          rootMargin:
+            "0px 0px -60px 0px"
+        }
+      );
+
 
     revealElements.forEach((element) => {
+
       revealObserver.observe(element);
+
     });
+
   } else {
+
     revealElements.forEach((element) => {
+
       element.classList.add("visible");
+
     });
+
   }
 
 
   /* =========================================================
-     SMOOTH ANCHOR LINKS
+     SMOOTH ANCHOR SCROLL
   ========================================================= */
 
-  const anchorLinks = $$('a[href^="#"]');
+  const anchorLinks = $$(
+    'a[href^="#"]'
+  );
+
 
   anchorLinks.forEach((link) => {
-    link.addEventListener("click", (event) => {
-      const targetID = link.getAttribute("href");
 
-      if (!targetID || targetID === "#") return;
+    link.addEventListener(
+      "click",
+      (event) => {
 
-      const target = $(targetID);
+        const targetId =
+          link.getAttribute("href");
 
-      if (!target) return;
 
-      event.preventDefault();
+        if (
+          !targetId ||
+          targetId === "#"
+        ) {
+          return;
+        }
 
-      target.scrollIntoView({
-        behavior: reducedMotion ? "auto" : "smooth",
-        block: "start"
-      });
 
-      closeMenu();
-    });
+        const target =
+          $(targetId);
+
+
+        if (!target) {
+          return;
+        }
+
+
+        event.preventDefault();
+
+
+        target.scrollIntoView({
+          behavior:
+            reduceMotion
+              ? "auto"
+              : "smooth",
+
+          block: "start"
+        });
+
+
+        closeMenu();
+
+      }
+    );
+
   });
 
 
@@ -246,130 +337,330 @@ document.addEventListener("DOMContentLoaded", () => {
      HERO IMAGE PARALLAX
   ========================================================= */
 
-  const heroImage = $(".hero-image");
+  const heroPortrait =
+    $(".hero-portrait");
 
-  if (heroImage && !reducedMotion) {
+  const heroImage =
+    $(".portrait-frame img");
+
+
+  if (
+    heroPortrait &&
+    heroImage &&
+    !reduceMotion
+  ) {
+
     let heroTicking = false;
 
+
     const updateHeroImage = () => {
-      const scrollY = window.scrollY;
-      const heroHeight = window.innerHeight;
+
+      const scrollY =
+        window.scrollY;
+
+      const heroHeight =
+        window.innerHeight;
+
 
       if (scrollY <= heroHeight) {
-        const movement = scrollY * 0.045;
+
+        const movement =
+          scrollY * 0.035;
+
 
         heroImage.style.transform =
-          `scale(1.06) translate3d(0, ${movement}px, 0)`;
+          `scale(1.04) translate3d(0, ${movement}px, 0)`;
+
       }
+
 
       heroTicking = false;
     };
 
+
     window.addEventListener(
       "scroll",
       () => {
+
         if (!heroTicking) {
-          requestAnimationFrame(updateHeroImage);
+
+          requestAnimationFrame(
+            updateHeroImage
+          );
+
           heroTicking = true;
         }
+
       },
-      { passive: true }
+      {
+        passive: true
+      }
     );
   }
 
 
   /* =========================================================
-     HERO MOUSE MOVEMENT
+     HERO MOUSE PARALLAX
   ========================================================= */
 
-  const hero = $(".hero");
+  const hero =
+    $(".hero");
+
 
   if (
     hero &&
+    heroPortrait &&
     finePointer &&
-    !reducedMotion
+    !reduceMotion
   ) {
-    const orbitElements = [
-      {
-        selector: ".hero::before",
-        x: 0,
-        y: 0
+
+    hero.addEventListener(
+      "mousemove",
+      (event) => {
+
+        const rect =
+          hero.getBoundingClientRect();
+
+
+        const x =
+          (event.clientX - rect.left) /
+          rect.width -
+          0.5;
+
+
+        const y =
+          (event.clientY - rect.top) /
+          rect.height -
+          0.5;
+
+
+        heroPortrait.style.transform =
+          `translate3d(${x * 7}px, ${y * 7}px, 0)`;
+
       }
-    ];
+    );
 
-    hero.addEventListener("mousemove", (event) => {
-      const rect = hero.getBoundingClientRect();
 
-      const x =
-        (event.clientX - rect.left) / rect.width - 0.5;
+    hero.addEventListener(
+      "mouseleave",
+      () => {
 
-      const y =
-        (event.clientY - rect.top) / rect.height - 0.5;
-
-      const imageFrame = $(".hero-image-frame");
-
-      if (imageFrame) {
-        imageFrame.style.transform =
-          `translate3d(${x * 8}px, ${y * 8}px, 0)`;
-      }
-    });
-
-    hero.addEventListener("mouseleave", () => {
-      const imageFrame = $(".hero-image-frame");
-
-      if (imageFrame) {
-        imageFrame.style.transform =
+        heroPortrait.style.transform =
           "translate3d(0, 0, 0)";
+
       }
-    });
+    );
   }
 
 
   /* =========================================================
-     PROJECT HOVER
+     WORK IMAGE HOVER
   ========================================================= */
 
-  const projects = $$(".project");
+  const workItems =
+    $$(".work-item");
 
-  projects.forEach((project) => {
-    project.addEventListener("mouseenter", () => {
-      project.classList.add("hovered");
-    });
 
-    project.addEventListener("mouseleave", () => {
-      project.classList.remove("hovered");
-    });
+  workItems.forEach((item) => {
+
+    const image =
+      $(".work-image-placeholder", item);
+
+
+    if (!image) {
+      return;
+    }
+
+
+    item.addEventListener(
+      "mousemove",
+      (event) => {
+
+        if (!finePointer || reduceMotion) {
+          return;
+        }
+
+
+        const rect =
+          item.getBoundingClientRect();
+
+
+        const x =
+          (event.clientX - rect.left) /
+          rect.width -
+          0.5;
+
+
+        const y =
+          (event.clientY - rect.top) /
+          rect.height -
+          0.5;
+
+
+        image.style.transform =
+          `scale(1.025) translate3d(${x * 7}px, ${y * 7}px, 0)`;
+
+      }
+    );
+
+
+    item.addEventListener(
+      "mouseleave",
+      () => {
+
+        image.style.transform =
+          "scale(1) translate3d(0, 0, 0)";
+
+      }
+    );
+
   });
 
 
   /* =========================================================
-     CONTACT LINKS
+     CONTACT ROWS
   ========================================================= */
 
-  const contactLinks = $$(".contact-link");
+  const contactRows =
+    $$(".contact-row");
 
-  contactLinks.forEach((link) => {
-    link.addEventListener("mouseenter", () => {
-      link.classList.add("active");
-    });
 
-    link.addEventListener("mouseleave", () => {
-      link.classList.remove("active");
-    });
+  contactRows.forEach((row) => {
+
+    const arrow =
+      $("b", row);
+
+
+    row.addEventListener(
+      "mousemove",
+      (event) => {
+
+        if (
+          !arrow ||
+          !finePointer ||
+          reduceMotion
+        ) {
+          return;
+        }
+
+
+        const rect =
+          row.getBoundingClientRect();
+
+
+        const x =
+          (event.clientX - rect.left) /
+          rect.width -
+          0.5;
+
+
+        const y =
+          (event.clientY - rect.top) /
+          rect.height -
+          0.5;
+
+
+        arrow.style.transform =
+          `translate(${x * 8}px, ${y * 8}px)`;
+
+      }
+    );
+
+
+    row.addEventListener(
+      "mouseleave",
+      () => {
+
+        if (!arrow) {
+          return;
+        }
+
+
+        arrow.style.transform =
+          "translate(0, 0)";
+
+      }
+    );
+
   });
+
+
+  /* =========================================================
+     MAGNETIC PROFILE BUTTON
+  ========================================================= */
+
+  const profileButton =
+    $(".profile-button");
+
+
+  if (
+    profileButton &&
+    finePointer &&
+    !reduceMotion
+  ) {
+
+    profileButton.addEventListener(
+      "mousemove",
+      (event) => {
+
+        const rect =
+          profileButton.getBoundingClientRect();
+
+
+        const x =
+          event.clientX -
+          rect.left -
+          rect.width / 2;
+
+
+        const y =
+          event.clientY -
+          rect.top -
+          rect.height / 2;
+
+
+        profileButton.style.transform =
+          `translate(${x * 0.08}px, ${y * 0.08}px)`;
+
+      }
+    );
+
+
+    profileButton.addEventListener(
+      "mouseleave",
+      () => {
+
+        profileButton.style.transform =
+          "translate(0, 0)";
+
+      }
+    );
+
+  }
 
 
   /* =========================================================
      EXTERNAL LINKS
   ========================================================= */
 
-  const externalLinks = $$(
-    'a[href^="http://"], a[href^="https://"]'
-  );
+  const externalLinks =
+    $$(
+      'a[href^="http://"], a[href^="https://"]'
+    );
+
 
   externalLinks.forEach((link) => {
-    link.setAttribute("target", "_blank");
-    link.setAttribute("rel", "noopener noreferrer");
+
+    link.setAttribute(
+      "target",
+      "_blank"
+    );
+
+    link.setAttribute(
+      "rel",
+      "noopener noreferrer"
+    );
+
   });
 
 
@@ -377,34 +668,49 @@ document.addEventListener("DOMContentLoaded", () => {
      RESIZE SAFETY
   ========================================================= */
 
-  window.addEventListener("resize", () => {
-    if (window.innerWidth > 700) {
-      closeMenu();
+  window.addEventListener(
+    "resize",
+    () => {
+
+      if (window.innerWidth > 700) {
+        closeMenu();
+      }
+
     }
-  });
+  );
 
 
   /* =========================================================
-     CURRENT YEAR
+     IMAGE LOAD STATE
   ========================================================= */
 
-  $$("[data-year]").forEach((element) => {
-    element.textContent = new Date().getFullYear();
-  });
+  const images =
+    $$("img");
 
 
-  /* =========================================================
-     IMAGE LOAD
-  ========================================================= */
+  images.forEach((image) => {
 
-  $$("img").forEach((image) => {
     if (image.complete) {
-      image.classList.add("loaded");
+
+      image.classList.add(
+        "loaded"
+      );
+
     } else {
-      image.addEventListener("load", () => {
-        image.classList.add("loaded");
-      });
+
+      image.addEventListener(
+        "load",
+        () => {
+
+          image.classList.add(
+            "loaded"
+          );
+
+        }
+      );
+
     }
+
   });
 
 
@@ -412,6 +718,8 @@ document.addEventListener("DOMContentLoaded", () => {
      PAGE READY
   ========================================================= */
 
-  document.documentElement.classList.add("js-ready");
+  document.documentElement.classList.add(
+    "js-ready"
+  );
 
 });
