@@ -2641,3 +2641,546 @@ html.js-ready .hero.page-entered .hero-portrait { opacity: 1; transform: transla
     transition-duration:.01ms !important;
   }
 }
+/* =========================================================
+   MOBILE SCROLL EXPERIENCE
+   ========================================================= */
+
+@media (max-width: 700px) {
+
+  /*
+     Base mobile motion state
+  */
+
+  .mobile-motion {
+    opacity: 0;
+    transform:
+      translate3d(0, 45px, 0)
+      scale(.97);
+
+    filter: blur(3px);
+
+    transition:
+      opacity .9s cubic-bezier(.22,1,.36,1),
+      transform 1s cubic-bezier(.22,1,.36,1),
+      filter 1s cubic-bezier(.22,1,.36,1);
+
+    transition-delay:
+      var(--mobile-delay, 0ms);
+
+    will-change:
+      transform,
+      opacity,
+      filter;
+  }
+
+
+  /*
+     Visible state
+  */
+
+  .mobile-motion.mobile-visible {
+
+    opacity: 1;
+
+    transform:
+      translate3d(0,0,0)
+      scale(1);
+
+    filter: blur(0);
+
+  }
+
+
+  /*
+     Stagger children inside larger blocks
+  */
+
+  .mobile-motion .venture-info,
+  .mobile-motion .project-information {
+
+    opacity: 0;
+
+    transform:
+      translate3d(0,30px,0);
+
+    transition:
+      opacity .8s cubic-bezier(.22,1,.36,1),
+      transform .9s cubic-bezier(.22,1,.36,1);
+
+    transition-delay: .16s;
+
+  }
+
+
+  .mobile-motion.mobile-visible .venture-info,
+  .mobile-motion.mobile-visible .project-information {
+
+    opacity: 1;
+
+    transform:
+      translate3d(0,0,0);
+
+  }
+
+
+  /*
+     Venture visual cinematic reveal
+  */
+
+  .venture-card .venture-visual,
+  .project-visual {
+
+    transform:
+      scale(.96)
+      translate3d(0,20px,0);
+
+    transition:
+      transform 1.2s cubic-bezier(.22,1,.36,1),
+      box-shadow 1s ease;
+
+  }
+
+
+  .venture-card.mobile-visible .venture-visual,
+  .project.mobile-visible .project-visual {
+
+    transform:
+      scale(1)
+      translate3d(0,0,0);
+
+    box-shadow:
+      0 30px 80px rgba(23,23,25,.18);
+
+  }
+
+
+  /*
+     Venture circles continuously breathe
+  */
+
+  .venture-visual::before {
+
+    animation:
+      mobileOrbitOne 8s ease-in-out infinite;
+
+  }
+
+
+  .venture-visual::after {
+
+    animation:
+      mobileOrbitTwo 6s ease-in-out infinite;
+
+  }
+
+
+  @keyframes mobileOrbitOne {
+
+    0%,100% {
+      transform:
+        rotate(0deg)
+        scale(1);
+    }
+
+    50% {
+      transform:
+        rotate(12deg)
+        scale(1.045);
+    }
+
+  }
+
+
+  @keyframes mobileOrbitTwo {
+
+    0%,100% {
+      transform:
+        rotate(0deg)
+        scale(1);
+    }
+
+    50% {
+      transform:
+        rotate(-18deg)
+        scale(.94);
+    }
+
+  }
+
+
+  /*
+     Wordmark movement
+  */
+
+  .venture-wordmark {
+
+    animation:
+      mobileWordmarkFloat 5s ease-in-out infinite;
+
+  }
+
+
+  @keyframes mobileWordmarkFloat {
+
+    0%,100% {
+      transform:
+        translate3d(0,0,0);
+    }
+
+    50% {
+      transform:
+        translate3d(0,-7px,0);
+    }
+
+  }
+
+
+  /*
+     Journey cards
+  */
+
+  .journey-card {
+
+    transform:
+      translate3d(0,35px,0)
+      scale(.97);
+
+    opacity: 0;
+
+    transition:
+      transform .9s cubic-bezier(.22,1,.36,1),
+      opacity .8s ease,
+      box-shadow .7s ease;
+
+  }
+
+
+  .journey-card.mobile-visible {
+
+    transform:
+      translate3d(0,0,0)
+      scale(1);
+
+    opacity: 1;
+
+  }
+
+
+  /*
+     Achievement cards
+  */
+
+  .achievement {
+
+    transform:
+      translate3d(0,30px,0)
+      scale(.97);
+
+    opacity: 0;
+
+    transition:
+      transform .8s cubic-bezier(.22,1,.36,1),
+      opacity .7s ease;
+
+  }
+
+
+  .achievement.mobile-visible {
+
+    transform:
+      translate3d(0,0,0)
+      scale(1);
+
+    opacity: 1;
+
+  }
+
+
+  /*
+     Certificate cards
+  */
+
+  .certificate {
+
+    transform:
+      translate3d(0,30px,0)
+      scale(.97);
+
+    opacity: 0;
+
+    transition:
+      transform .8s cubic-bezier(.22,1,.36,1),
+      opacity .7s ease;
+
+  }
+
+
+  .certificate.mobile-visible {
+
+    transform:
+      translate3d(0,0,0)
+      scale(1);
+
+    opacity: 1;
+
+  }
+
+
+  /*
+     Skills
+
+     Each skill slides in slightly from the side.
+  */
+
+  .skill {
+
+    opacity: 0;
+
+    transform:
+      translate3d(-25px,0,0);
+
+    transition:
+      opacity .8s ease,
+      transform .8s cubic-bezier(.22,1,.36,1);
+
+  }
+
+
+  .skill.mobile-visible {
+
+    opacity: 1;
+
+    transform:
+      translate3d(0,0,0);
+
+  }
+
+
+  /*
+     Skill orange line
+  */
+
+  .skill::before {
+
+    transform:
+      scaleX(0);
+
+    transform-origin:
+      left center;
+
+    transition:
+      transform 1s cubic-bezier(.22,1,.36,1);
+
+  }
+
+
+  .skill.mobile-visible::before {
+
+    transform:
+      scaleX(1);
+
+  }
+
+
+  /*
+     Hero image
+
+     Scroll movement is handled by JS.
+     This keeps the image smooth instead of
+     fighting with the existing hover transform.
+  */
+
+  .portrait-frame {
+
+    overflow: hidden;
+
+    transform:
+      translateZ(0);
+
+  }
+
+
+  .portrait-frame img {
+
+    will-change:
+      transform;
+
+  }
+
+
+  /*
+     Hero glow animation
+  */
+
+  .hero-glow-one,
+  .hero-glow-two {
+
+    will-change:
+      transform;
+
+  }
+
+
+  /*
+     Hero grid slowly breathes
+  */
+
+  .hero-grid {
+
+    animation:
+      mobileGridPulse 8s ease-in-out infinite;
+
+  }
+
+
+  @keyframes mobileGridPulse {
+
+    0%,100% {
+      opacity: .22;
+    }
+
+    50% {
+      opacity: .34;
+    }
+
+  }
+
+
+  /*
+     Touch interaction
+  */
+
+  .mobile-touch-active {
+
+    transform:
+      scale(.985) !important;
+
+    transition:
+      transform .18s ease !important;
+
+  }
+
+
+  /*
+     Mobile project information
+  */
+
+  .project-information {
+
+    box-shadow:
+      0 25px 65px rgba(23,23,25,.12);
+
+    transition:
+      transform .8s cubic-bezier(.22,1,.36,1),
+      box-shadow .8s ease;
+
+  }
+
+
+  /*
+     Contact entrance
+  */
+
+  .contact-inner > * {
+
+    will-change:
+      transform,
+      opacity;
+
+  }
+
+
+  /*
+     Mobile marquee stays smooth
+  */
+
+  .marquee-track {
+
+    will-change:
+      transform;
+
+  }
+
+
+  /*
+     Slight section depth
+  */
+
+  .section {
+
+    transform:
+      translateZ(0);
+
+  }
+
+
+  /*
+     Don't allow hover rules to interfere
+     with touch devices.
+  */
+
+  .venture-card:hover,
+  .journey-card:hover,
+  .achievement:hover,
+  .certificate:hover {
+
+    transform:
+      none;
+
+  }
+
+
+  /*
+     Performance
+  */
+
+  .venture-visual,
+  .venture-info,
+  .journey-card,
+  .achievement,
+  .certificate,
+  .skill,
+  .project-visual,
+  .project-information {
+
+    backface-visibility:
+      hidden;
+
+    -webkit-backface-visibility:
+      hidden;
+
+  }
+
+}
+
+
+/* =========================================================
+   MOBILE REDUCED MOTION
+   ========================================================= */
+
+@media (max-width: 700px) and
+       (prefers-reduced-motion: reduce) {
+
+  .mobile-motion,
+  .journey-card,
+  .achievement,
+  .certificate,
+  .skill {
+
+    opacity: 1 !important;
+
+    transform:
+      none !important;
+
+    filter:
+      none !important;
+
+    transition:
+      none !important;
+
+    animation:
+      none !important;
+
+  }
+
+}
