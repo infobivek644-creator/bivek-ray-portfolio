@@ -1,5 +1,11 @@
+/* =========================================================
+   BIVEK RAY — PREMIUM PORTFOLIO
+   MASTER JAVASCRIPT
+========================================================= */
+
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
+
 
   /* =========================================================
      HELPERS
@@ -11,158 +17,162 @@ document.addEventListener("DOMContentLoaded", () => {
   const $$ = (selector, parent = document) =>
     [...parent.querySelectorAll(selector)];
 
-  const reduceMotion = window.matchMedia(
-    "(prefers-reduced-motion: reduce)"
-  ).matches;
-
-  const finePointer = window.matchMedia(
-    "(pointer: fine)"
-  ).matches;
-
 
   /* =========================================================
      PAGE LOADER
   ========================================================= */
 
-  const loader = $(".page-loader");
+  const loader = $(".loader");
 
-  const hideLoader = () => {
-    if (!loader) return;
-
-    setTimeout(() => {
-      loader.classList.add("loaded");
-    }, 700);
-  };
-
-  if (document.readyState === "complete") {
-    hideLoader();
-  } else {
-    window.addEventListener("load", hideLoader, {
-      once: true
+  if (loader) {
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        loader.classList.add("loaded");
+      }, 500);
     });
   }
 
 
   /* =========================================================
-     HEADER
+     CUSTOM CURSOR
   ========================================================= */
 
-  const header = $(".site-header");
+  const cursorDot = $(".cursor-dot");
+  const cursorCircle = $(".cursor-circle");
 
-  let lastScroll = window.scrollY;
+  const finePointer = window.matchMedia("(pointer: fine)").matches;
 
-  const updateHeader = () => {
-    if (!header) return;
+  if (cursorDot && cursorCircle && finePointer) {
 
-    const currentScroll = window.scrollY;
+    let mouseX = window.innerWidth / 2;
+    let mouseY = window.innerHeight / 2;
 
-    if (currentScroll > 30) {
-      header.classList.add("scrolled");
-    } else {
-      header.classList.remove("scrolled");
-    }
+    let circleX = mouseX;
+    let circleY = mouseY;
 
-    if (
-      currentScroll > 120 &&
-      currentScroll > lastScroll
-    ) {
-      header.classList.add("hidden");
-    } else {
-      header.classList.remove("hidden");
-    }
+    document.addEventListener("mousemove", (event) => {
+      mouseX = event.clientX;
+      mouseY = event.clientY;
 
-    lastScroll = currentScroll;
-  };
+      cursorDot.style.left = `${mouseX}px`;
+      cursorDot.style.top = `${mouseY}px`;
+    });
 
-  window.addEventListener(
-    "scroll",
-    updateHeader,
-    { passive: true }
-  );
+    const animateCursor = () => {
+      circleX += (mouseX - circleX) * 0.13;
+      circleY += (mouseY - circleY) * 0.13;
+
+      cursorCircle.style.left = `${circleX}px`;
+      cursorCircle.style.top = `${circleY}px`;
+
+      requestAnimationFrame(animateCursor);
+    };
+
+    animateCursor();
+
+    const interactiveElements = $$(
+      "a, button, .project, .skill, .portrait-frame"
+    );
+
+    interactiveElements.forEach((element) => {
+
+      element.addEventListener("mouseenter", () => {
+        cursorCircle.classList.add("active");
+      });
+
+      element.addEventListener("mouseleave", () => {
+        cursorCircle.classList.remove("active");
+      });
+
+    });
+  }
 
 
   /* =========================================================
      MOBILE MENU
   ========================================================= */
 
-  const menuButton = $(".mobile-menu-button");
-  const mobileMenu = $(".mobile-menu");
-  const mobileLinks = $$(".mobile-menu a");
+  const menuToggle = $(".menu-toggle");
+  const mobileNavigation = $(".mobile-navigation");
+  const mobileLinks = $$(".mobile-navigation a");
 
   const closeMenu = () => {
-    if (!menuButton || !mobileMenu) return;
 
-    menuButton.classList.remove("open");
-    mobileMenu.classList.remove("open");
+    if (!menuToggle || !mobileNavigation) return;
+
+    menuToggle.classList.remove("open");
+    mobileNavigation.classList.remove("open");
+
     document.body.classList.remove("menu-open");
   };
 
-  if (menuButton && mobileMenu) {
-    menuButton.addEventListener("click", () => {
+  if (menuToggle && mobileNavigation) {
+
+    menuToggle.addEventListener("click", () => {
+
       const isOpen =
-        mobileMenu.classList.toggle("open");
+        mobileNavigation.classList.contains("open");
 
-      menuButton.classList.toggle(
-        "open",
-        isOpen
-      );
+      if (isOpen) {
 
-      document.body.classList.toggle(
-        "menu-open",
-        isOpen
-      );
+        closeMenu();
+
+      } else {
+
+        menuToggle.classList.add("open");
+        mobileNavigation.classList.add("open");
+
+        document.body.classList.add("menu-open");
+
+      }
+
     });
 
     mobileLinks.forEach((link) => {
-      link.addEventListener("click", closeMenu);
-    });
-  }
 
-  document.addEventListener("keydown", (event) => {
-    if (event.key === "Escape") {
-      closeMenu();
-    }
-  });
-
-
-  /* =========================================================
-     SMOOTH SCROLL
-  ========================================================= */
-
-  $$('a[href^="#"]').forEach((link) => {
-
-    link.addEventListener("click", (event) => {
-
-      const id =
-        link.getAttribute("href");
-
-      if (!id || id === "#") return;
-
-      const target =
-        document.querySelector(id);
-
-      if (!target) return;
-
-      event.preventDefault();
-
-      const headerHeight =
-        header ? header.offsetHeight : 0;
-
-      const position =
-        target.getBoundingClientRect().top +
-        window.scrollY -
-        headerHeight;
-
-      window.scrollTo({
-        top: position,
-        behavior: reduceMotion
-          ? "auto"
-          : "smooth"
+      link.addEventListener("click", () => {
+        closeMenu();
       });
 
     });
+  }
 
-  });
+
+  /* =========================================================
+     HEADER SHOW / HIDE
+  ========================================================= */
+
+  const header = $(".header");
+
+  if (header) {
+
+    let lastScroll = window.scrollY;
+
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        const currentScroll = window.scrollY;
+
+        if (
+          currentScroll > 120 &&
+          currentScroll > lastScroll
+        ) {
+
+          header.classList.add("hidden");
+
+        } else {
+
+          header.classList.remove("hidden");
+
+        }
+
+        lastScroll = currentScroll;
+
+      },
+      { passive: true }
+    );
+  }
 
 
   /* =========================================================
@@ -171,39 +181,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   const revealElements = $$(".reveal");
 
-  if (
-    revealElements.length &&
-    !reduceMotion &&
-    "IntersectionObserver" in window
-  ) {
+  if ("IntersectionObserver" in window) {
 
-    const observer =
-      new IntersectionObserver(
-        (entries, observer) => {
+    const observer = new IntersectionObserver(
+      (entries, observerInstance) => {
 
-          entries.forEach((entry) => {
+        entries.forEach((entry) => {
 
-            if (!entry.isIntersecting) {
-              return;
-            }
+          if (entry.isIntersecting) {
 
-            entry.target.classList.add(
-              "visible"
-            );
+            entry.target.classList.add("visible");
 
-            observer.unobserve(
-              entry.target
-            );
+            observerInstance.unobserve(entry.target);
 
-          });
+          }
 
-        },
-        {
-          threshold: 0.08,
-          rootMargin:
-            "0px 0px -80px 0px"
-        }
-      );
+        });
+
+      },
+      {
+        threshold: 0.12,
+        rootMargin: "0px 0px -50px 0px"
+      }
+    );
 
     revealElements.forEach((element) => {
       observer.observe(element);
@@ -219,123 +219,70 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     HERO INTRO ANIMATION
+     STAGGERED REVEALS
   ========================================================= */
 
-  document.documentElement.classList.add(
-    "js-ready"
-  );
+  const staggerGroups = $$(".stagger");
+
+  staggerGroups.forEach((group) => {
+
+    const children = [...group.children];
+
+    children.forEach((child, index) => {
+
+      child.style.transitionDelay =
+        `${index * 80}ms`;
+
+    });
+
+  });
 
 
   /* =========================================================
-     HERO PHOTO
+     SMOOTH ANCHOR SCROLL
   ========================================================= */
 
-  const hero = $(".hero");
-  const portrait = $(".portrait");
-  const heroCircle = $(".hero-circle-one");
+  const anchorLinks = $$('a[href^="#"]');
 
-  if (
-    hero &&
-    portrait &&
-    finePointer &&
-    !reduceMotion
-  ) {
+  anchorLinks.forEach((link) => {
 
-    hero.addEventListener(
-      "mousemove",
-      (event) => {
+    link.addEventListener("click", (event) => {
 
-        const rect =
-          hero.getBoundingClientRect();
+      const targetId =
+        link.getAttribute("href");
 
-        const x =
-          (event.clientX - rect.left) /
-          rect.width -
-          0.5;
+      if (!targetId || targetId === "#") return;
 
-        const y =
-          (event.clientY - rect.top) /
-          rect.height -
-          0.5;
+      const target = $(targetId);
 
-        portrait.style.transform =
-          `scale(1.05)
-           translate3d(
-             ${x * 8}px,
-             ${y * 8}px,
-             0
-           )`;
+      if (!target) return;
 
-        if (heroCircle) {
-          heroCircle.style.transform =
-            `translate3d(
-              ${x * -20}px,
-              ${y * -20}px,
-              0
-            ) rotate(-10deg)`;
-        }
+      event.preventDefault();
 
-      }
-    );
+      target.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
 
-    hero.addEventListener(
-      "mouseleave",
-      () => {
+    });
 
-        portrait.style.transform =
-          "scale(1.05) translate3d(0,0,0)";
-
-        if (heroCircle) {
-          heroCircle.style.transform =
-            "translate3d(0,0,0) rotate(-10deg)";
-        }
-
-      }
-    );
-
-  }
+  });
 
 
   /* =========================================================
-     PARALLAX
+     HERO IMAGE PARALLAX
   ========================================================= */
 
-  const parallaxElements =
-    $$(".hero-leaf, .hero-circle-two");
+  const portrait = $(".portrait-frame img");
 
-  if (
-    parallaxElements.length &&
-    !reduceMotion
-  ) {
+  const reducedMotion =
+    window.matchMedia(
+      "(prefers-reduced-motion: reduce)"
+    ).matches;
+
+  if (portrait && !reducedMotion) {
 
     let ticking = false;
-
-    const updateParallax = () => {
-
-      const scrollY =
-        window.scrollY;
-
-      parallaxElements.forEach(
-        (element, index) => {
-
-          const speed =
-            index % 2 === 0
-              ? 0.035
-              : -0.025;
-
-          element.style.transform =
-            `translate3d(
-              0,
-              ${scrollY * speed}px,
-              0
-            )`;
-
-        }
-      );
-
-      ticking = false;
-    };
 
     window.addEventListener(
       "scroll",
@@ -343,270 +290,141 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (ticking) return;
 
-        requestAnimationFrame(
-          updateParallax
-        );
-
         ticking = true;
+
+        requestAnimationFrame(() => {
+
+          const scrollY = window.scrollY;
+
+          if (scrollY < window.innerHeight) {
+
+            const movement = scrollY * 0.035;
+
+            portrait.style.transform =
+              `scale(1.04) translate3d(0, ${movement}px, 0)`;
+
+          }
+
+          ticking = false;
+
+        });
 
       },
       { passive: true }
     );
-
   }
 
 
   /* =========================================================
-     CARD TILT
+     HERO BACKGROUND PARALLAX
   ========================================================= */
 
+  const glowOne = $(".hero-glow-one");
+  const glowTwo = $(".hero-glow-two");
+
   if (
-    finePointer &&
-    !reduceMotion
+    !reducedMotion &&
+    (glowOne || glowTwo)
   ) {
 
-    const cards = $$(
-      ".venture-card, .journey-card, .achievement, .certification"
+    window.addEventListener(
+      "scroll",
+      () => {
+
+        const scrollY = window.scrollY;
+
+        if (glowOne) {
+
+          glowOne.style.transform =
+            `translate3d(0, ${scrollY * 0.08}px, 0)`;
+
+        }
+
+        if (glowTwo) {
+
+          glowTwo.style.transform =
+            `translate3d(0, ${scrollY * -0.04}px, 0)`;
+
+        }
+
+      },
+      { passive: true }
     );
-
-    cards.forEach((card) => {
-
-      card.addEventListener(
-        "mousemove",
-        (event) => {
-
-          const rect =
-            card.getBoundingClientRect();
-
-          const x =
-            (event.clientX - rect.left) /
-            rect.width -
-            0.5;
-
-          const y =
-            (event.clientY - rect.top) /
-            rect.height -
-            0.5;
-
-          card.style.transform =
-            `perspective(1000px)
-             rotateX(${y * -2}deg)
-             rotateY(${x * 2}deg)
-             translateY(-6px)`;
-
-        }
-      );
-
-      card.addEventListener(
-        "mouseleave",
-        () => {
-          card.style.transform = "";
-        }
-      );
-
-    });
-
   }
 
 
   /* =========================================================
-     MAGNETIC BUTTONS
+     PROJECT VISUAL TILT
   ========================================================= */
 
-  if (
-    finePointer &&
-    !reduceMotion
-  ) {
+  const projectVisuals = $$(".project-visual");
 
-    const buttons = $$(
-      ".primary-button, .header-cta, .text-button"
-    );
+  if (!reducedMotion && finePointer) {
 
-    buttons.forEach((button) => {
+    projectVisuals.forEach((visual) => {
 
-      button.addEventListener(
-        "mousemove",
-        (event) => {
+      visual.addEventListener("mousemove", (event) => {
 
-          const rect =
-            button.getBoundingClientRect();
+        const rect =
+          visual.getBoundingClientRect();
 
-          const x =
-            event.clientX -
-            rect.left -
-            rect.width / 2;
+        const x =
+          event.clientX - rect.left;
 
-          const y =
-            event.clientY -
-            rect.top -
-            rect.height / 2;
+        const y =
+          event.clientY - rect.top;
 
-          button.style.transform =
-            `translate(
-              ${x * 0.10}px,
-              ${y * 0.10}px
-            )`;
+        const rotateX =
+          ((y / rect.height) - 0.5) * -3;
 
-        }
-      );
+        const rotateY =
+          ((x / rect.width) - 0.5) * 3;
 
-      button.addEventListener(
-        "mouseleave",
-        () => {
-          button.style.transform = "";
-        }
-      );
+        visual.style.transform =
+          `perspective(1000px)
+           rotateX(${rotateX}deg)
+           rotateY(${rotateY}deg)`;
+      });
+
+      visual.addEventListener("mouseleave", () => {
+
+        visual.style.transform =
+          "perspective(1000px) rotateX(0) rotateY(0)";
+
+      });
 
     });
-
   }
 
 
   /* =========================================================
-     CUSTOM CURSOR
+     SKILL HOVER
   ========================================================= */
 
-  const cursor = $(".cursor");
+  const skills = $$(".skill");
 
-  if (
-    cursor &&
-    finePointer &&
-    !reduceMotion
-  ) {
+  skills.forEach((skill) => {
 
-    let mouseX =
-      window.innerWidth / 2;
-
-    let mouseY =
-      window.innerHeight / 2;
-
-    let cursorX = mouseX;
-    let cursorY = mouseY;
-
-    document.addEventListener(
-      "mousemove",
-      (event) => {
-
-        mouseX = event.clientX;
-        mouseY = event.clientY;
-
-      }
-    );
-
-    const renderCursor = () => {
-
-      cursorX +=
-        (mouseX - cursorX) * 0.18;
-
-      cursorY +=
-        (mouseY - cursorY) * 0.18;
-
-      cursor.style.left =
-        `${cursorX}px`;
-
-      cursor.style.top =
-        `${cursorY}px`;
-
-      requestAnimationFrame(
-        renderCursor
-      );
-
-    };
-
-    renderCursor();
-
-    const interactive =
-      $$(
-        "a, button, .venture-card, .skill-item, .journey-card, .achievement, .certification, .portrait-frame"
-      );
-
-    interactive.forEach((element) => {
-
-      element.addEventListener(
-        "mouseenter",
-        () => {
-          cursor.classList.add(
-            "active"
-          );
-        }
-      );
-
-      element.addEventListener(
-        "mouseleave",
-        () => {
-          cursor.classList.remove(
-            "active"
-          );
-        }
-      );
-
+    skill.addEventListener("mouseenter", () => {
+      skill.classList.add("is-hovered");
     });
 
-  }
-
-
-  /* =========================================================
-     ACTIVE NAVIGATION
-  ========================================================= */
-
-  const sections =
-    $$("section[id]");
-
-  const navLinks =
-    $$('.desktop-nav a[href^="#"]');
-
-  if (
-    sections.length &&
-    navLinks.length &&
-    "IntersectionObserver" in window
-  ) {
-
-    const navObserver =
-      new IntersectionObserver(
-        (entries) => {
-
-          entries.forEach((entry) => {
-
-            if (!entry.isIntersecting) {
-              return;
-            }
-
-            const id =
-              entry.target.id;
-
-            navLinks.forEach((link) => {
-
-              link.classList.toggle(
-                "active",
-                link.getAttribute("href") ===
-                  `#${id}`
-              );
-
-            });
-
-          });
-
-        },
-        {
-          rootMargin:
-            "-35% 0px -55% 0px"
-        }
-      );
-
-    sections.forEach((section) => {
-      navObserver.observe(section);
+    skill.addEventListener("mouseleave", () => {
+      skill.classList.remove("is-hovered");
     });
 
-  }
+  });
 
 
   /* =========================================================
      EXTERNAL LINKS
   ========================================================= */
 
-  $$(
+  const externalLinks = $$(
     'a[href^="http://"], a[href^="https://"]'
-  ).forEach((link) => {
+  );
+
+  externalLinks.forEach((link) => {
 
     link.setAttribute(
       "target",
@@ -622,30 +440,74 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
   /* =========================================================
-     CURRENT YEAR
+     ESCAPE KEY
   ========================================================= */
 
-  $$("[data-year]").forEach(
-    (element) => {
-      element.textContent =
-        new Date().getFullYear();
+  document.addEventListener(
+    "keydown",
+    (event) => {
+
+      if (event.key === "Escape") {
+        closeMenu();
+      }
+
     }
   );
 
 
   /* =========================================================
-     RESIZE
+     RESIZE SAFETY
   ========================================================= */
 
   window.addEventListener(
     "resize",
     () => {
 
-      if (window.innerWidth > 760) {
+      if (window.innerWidth > 1000) {
         closeMenu();
       }
 
     }
+  );
+
+
+  /* =========================================================
+     CURRENT YEAR
+  ========================================================= */
+
+  const yearElements = $$("[data-year]");
+
+  yearElements.forEach((element) => {
+
+    element.textContent =
+      new Date().getFullYear();
+
+  });
+
+
+  /* =========================================================
+     IMAGE FALLBACK
+  ========================================================= */
+
+  const images = $$("img");
+
+  images.forEach((image) => {
+
+    image.addEventListener("error", () => {
+
+      image.style.opacity = "0";
+
+    });
+
+  });
+
+
+  /* =========================================================
+     PAGE READY
+  ========================================================= */
+
+  document.documentElement.classList.add(
+    "js-ready"
   );
 
 });
