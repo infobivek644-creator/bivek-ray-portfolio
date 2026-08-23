@@ -6,7 +6,6 @@
 document.addEventListener("DOMContentLoaded", () => {
   "use strict";
 
-
   /* =========================================================
      HELPERS
   ========================================================= */
@@ -500,6 +499,479 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
   });
+
+
+  /* =========================================================
+     EXPERIENCE LAYER — ADVANCED INTERACTIONS
+  ========================================================= */
+
+  const root = document.documentElement;
+  const hero = $(".hero");
+
+  /* Scroll progress bar */
+  const progress = document.createElement("div");
+  progress.className = "scroll-progress";
+  document.body.appendChild(progress);
+
+
+  /* =========================================================
+     CINEMATIC PAGE ENTRANCE
+  ========================================================= */
+
+  window.addEventListener("load", () => {
+
+    setTimeout(() => {
+
+      hero?.classList.add("page-entered");
+
+    }, 80);
+
+  });
+
+
+  /* =========================================================
+     SCROLL PROGRESS + VELOCITY
+  ========================================================= */
+
+  let scrollTick = false;
+  let previousScroll = window.scrollY;
+
+  const updateScrollExperience = () => {
+
+    const maxScroll =
+      document.documentElement.scrollHeight -
+      window.innerHeight;
+
+    const ratio =
+      maxScroll > 0
+        ? window.scrollY / maxScroll
+        : 0;
+
+    progress.style.transform =
+      `scaleX(${Math.min(1, Math.max(0, ratio))})`;
+
+    const velocity =
+      Math.min(
+        2,
+        Math.abs(window.scrollY - previousScroll)
+      );
+
+    document.body.style.setProperty(
+      "--scroll-velocity",
+      velocity.toFixed(2)
+    );
+
+    previousScroll = window.scrollY;
+
+    scrollTick = false;
+  };
+
+
+  window.addEventListener(
+    "scroll",
+    () => {
+
+      if (!scrollTick) {
+
+        requestAnimationFrame(
+          updateScrollExperience
+        );
+
+        scrollTick = true;
+      }
+
+    },
+    { passive: true }
+  );
+
+
+  updateScrollExperience();
+
+
+  /* =========================================================
+     MOUSE-DRIVEN ATMOSPHERE
+  ========================================================= */
+
+  if (finePointer && !reducedMotion) {
+
+    document.addEventListener(
+      "mousemove",
+      (event) => {
+
+        const x =
+          (event.clientX / window.innerWidth - 0.5) * 2;
+
+        const y =
+          (event.clientY / window.innerHeight - 0.5) * 2;
+
+        root.style.setProperty(
+          "--mouse-x",
+          x.toFixed(3)
+        );
+
+        root.style.setProperty(
+          "--mouse-y",
+          y.toFixed(3)
+        );
+
+        if (hero) {
+
+          hero.style.setProperty(
+            "--hero-mx",
+            `${x * 12}px`
+          );
+
+          hero.style.setProperty(
+            "--hero-my",
+            `${y * 12}px`
+          );
+
+        }
+
+      },
+      { passive: true }
+    );
+  }
+
+
+  /* =========================================================
+     MAGNETIC BUTTONS
+  ========================================================= */
+
+  const magneticElements = $$(
+    ".button, .header-social, .footer-logo, .contact-links a, .project-link"
+  );
+
+  if (finePointer && !reducedMotion) {
+
+    magneticElements.forEach((element) => {
+
+      element.classList.add("magnetic");
+
+      element.addEventListener(
+        "mousemove",
+        (event) => {
+
+          const rect =
+            element.getBoundingClientRect();
+
+          const x =
+            event.clientX -
+            rect.left -
+            rect.width / 2;
+
+          const y =
+            event.clientY -
+            rect.top -
+            rect.height / 2;
+
+          const strength =
+            element.classList.contains("button")
+              ? 0.14
+              : 0.08;
+
+          element.style.transform =
+            `translate(
+              ${x * strength}px,
+              ${y * strength}px
+            )`;
+        }
+      );
+
+      element.addEventListener(
+        "mouseleave",
+        () => {
+
+          element.style.transform = "";
+
+        }
+      );
+
+    });
+
+  }
+
+
+  /* =========================================================
+     3D CARDS
+  ========================================================= */
+
+  const tiltCards = $$(
+    '[data-tilt], .achievement, .certificate'
+  );
+
+  if (finePointer && !reducedMotion) {
+
+    tiltCards.forEach((card) => {
+
+      card.addEventListener(
+        "mousemove",
+        (event) => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+          const px =
+            (event.clientX - rect.left) /
+            rect.width;
+
+          const py =
+            (event.clientY - rect.top) /
+            rect.height;
+
+          const rotateY =
+            (px - 0.5) * 5;
+
+          const rotateX =
+            (py - 0.5) * -5;
+
+          card.style.setProperty(
+            "--tilt-x",
+            `${rotateX}deg`
+          );
+
+          card.style.setProperty(
+            "--tilt-y",
+            `${rotateY}deg`
+          );
+
+          card.style.transform =
+            `perspective(1100px)
+             rotateX(${rotateX}deg)
+             rotateY(${rotateY}deg)
+             translateY(-6px)`;
+
+        }
+      );
+
+      card.addEventListener(
+        "mouseleave",
+        () => {
+
+          card.style.transform = "";
+
+        }
+      );
+
+    });
+
+  }
+
+
+  /* =========================================================
+     SPOTLIGHT EFFECT
+  ========================================================= */
+
+  const spotlightCards = $$(
+    ".skill, .journey-card, .achievement, .certificate, .venture-card"
+  );
+
+  if (finePointer && !reducedMotion) {
+
+    spotlightCards.forEach((card) => {
+
+      card.addEventListener(
+        "mousemove",
+        (event) => {
+
+          const rect =
+            card.getBoundingClientRect();
+
+          card.style.setProperty(
+            "--spot-x",
+            `${event.clientX - rect.left}px`
+          );
+
+          card.style.setProperty(
+            "--spot-y",
+            `${event.clientY - rect.top}px`
+          );
+
+        },
+        { passive: true }
+      );
+
+    });
+
+  }
+
+
+  /* =========================================================
+     SPOTLIGHT ACTIVE STATE
+  ========================================================= */
+
+  if (finePointer && !reducedMotion) {
+
+    spotlightCards.forEach((card) => {
+
+      card.addEventListener(
+        "mouseenter",
+        () => {
+
+          card.classList.add(
+            "spotlight-active"
+          );
+
+        }
+      );
+
+      card.addEventListener(
+        "mouseleave",
+        () => {
+
+          card.classList.remove(
+            "spotlight-active"
+          );
+
+        }
+      );
+
+    });
+
+  }
+
+
+  /* =========================================================
+     ACTIVE SECTION NAVIGATION
+  ========================================================= */
+
+  const navTargets = [
+    "about",
+    "work",
+    "skills",
+    "journey",
+    "achievements",
+    "certifications",
+    "contact"
+  ]
+    .map((id) => document.getElementById(id))
+    .filter(Boolean);
+
+
+  const navLinks = $$(
+    'nav a[href^="#"], .mobile-navigation a[href^="#"]'
+  );
+
+
+  if (
+    "IntersectionObserver" in window &&
+    navTargets.length
+  ) {
+
+    const navObserver =
+      new IntersectionObserver(
+        (entries) => {
+
+          entries.forEach((entry) => {
+
+            if (!entry.isIntersecting) return;
+
+            const id =
+              `#${entry.target.id}`;
+
+            navLinks.forEach((link) => {
+
+              link.classList.toggle(
+                "current",
+                link.getAttribute("href") === id
+              );
+
+            });
+
+          });
+
+        },
+        {
+          rootMargin:
+            "-35% 0px -55% 0px",
+          threshold: 0
+        }
+      );
+
+
+    navTargets.forEach((section) => {
+
+      navObserver.observe(section);
+
+    });
+
+  }
+
+
+  /* =========================================================
+     DYNAMIC MARQUEE
+  ========================================================= */
+
+  const marqueeTrack =
+    $(".marquee-track");
+
+  let marqueeOffset = 0;
+  let marqueeLast = performance.now();
+
+
+  if (
+    marqueeTrack &&
+    !reducedMotion
+  ) {
+
+    const animateMarquee = (now) => {
+
+      const dt =
+        Math.min(
+          40,
+          now - marqueeLast
+        );
+
+      marqueeLast = now;
+
+
+      const velocity =
+        Number(
+          document.body.style
+            .getPropertyValue(
+              "--scroll-velocity"
+            )
+        ) || 0;
+
+
+      marqueeOffset -=
+        dt *
+        (
+          0.012 +
+          velocity * 0.003
+        );
+
+
+      if (
+        Math.abs(marqueeOffset) >
+        marqueeTrack.scrollWidth / 2
+      ) {
+
+        marqueeOffset = 0;
+
+      }
+
+
+      marqueeTrack.style.transform =
+        `translate3d(
+          ${marqueeOffset}px,
+          0,
+          0
+        )`;
+
+
+      requestAnimationFrame(
+        animateMarquee
+      );
+
+    };
+
+
+    requestAnimationFrame(
+      animateMarquee
+    );
+
+  }
 
 
   /* =========================================================
