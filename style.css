@@ -3102,3 +3102,26 @@ html.js-ready .hero.page-entered .hero-portrait { opacity: 1; transform: transla
   }
 
 }
+/* LinkedIn icon button */
+.profile-copy > .button.button-primary {
+  width: 54px;
+  height: 54px;
+  min-height: 54px;
+  padding: 0;
+  gap: 0;
+  border-radius: 50%;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.profile-copy > .button.button-primary .social-icon {
+  width: 22px;
+  height: 22px;
+}
+
+.profile-copy > .button.button-primary:hover {
+  transform: translateY(-4px);
+  background: var(--ink);
+  border-color: var(--ink);
+}
